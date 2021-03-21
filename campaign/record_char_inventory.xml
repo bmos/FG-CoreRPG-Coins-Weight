@@ -8,7 +8,7 @@
 	<windowclass name="charsheet_inventory" merge="join">
 		<sheetdata>
 			<!--Coin Type 1-->
-			<number_dropadd name="coinamount1" >
+			<number_dropadd name="coinamount1" source="coins.slot1.amount">
 				<script>
 					function onInit()
 						onValueChanged()
@@ -30,7 +30,7 @@
 			</stringu>
 
 			<!--Coin Type 2-->
-			<number_dropadd name="coinamount2">
+			<number_dropadd name="coinamount2" source="coins.slot2.amount">
 				<script>
 					function onValueChanged()
 						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
@@ -49,7 +49,7 @@
 			</stringu>
 
 			<!--Coin Type 3-->
-			<number_dropadd name="coinamount3">
+			<number_dropadd name="coinamount3" source="coins.slot3.amount">
 				<script>
 					function onValueChanged()
 						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
@@ -68,7 +68,7 @@
 			</stringu>
 
 			<!--Coin Type 4-->
-			<number_dropadd name="coinamount4">
+			<number_dropadd name="coinamount4" source="coins.slot4.amount">
 				<script>
 					function onValueChanged()
 						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
@@ -87,7 +87,7 @@
 			</stringu>
 
 			<!--Coin Type 5-->
-			<number_dropadd name="coinamount5">
+			<number_dropadd name="coinamount5" source="coins.slot5.amount">
 				<script>
 					function onValueChanged()
 						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
@@ -105,7 +105,7 @@
 			</stringu>
 
 			<!--Coin Type 6-->
-			<number_dropadd name="coinamount6">
+			<number_dropadd name="coinamount6" source="coins.slot6.amount">
 				<script>
 					function onValueChanged()
 						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
