@@ -5,7 +5,7 @@
 <root version='3.3' release='3'>
 	<properties>
 		<name>Coins Weight</name>
-		<version>1.0</version>
+		<version>1.1</version>
 		<author>bmos (Wil Thieme)</author>
 		<description>Calculates coin weight by leveraging existing inventory weight process.</description>
 		<ruleset name="CoreRPG" />
@@ -13,7 +13,7 @@
 		<ruleset name="PFRPG" />
 	</properties>
 
-	<announcement text="Coin Weight v1.0:\rCalculates coin weight by leveraging existing inventory weight process." font="emotefont" />
+	<announcement text="Coin Weight v1.1:\rCalculates coin weight by leveraging existing inventory weight process." font="emotefont" />
 
 	<base>
 		<!-- Records -->
