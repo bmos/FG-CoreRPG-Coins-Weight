@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Please see the LICENSE.md file included with this distribution for attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="charsheet_inventory" merge="join">
+		<sheetdata>
+			<!--Coin Type 1-->
+			<number_dropadd name="coinamount1" >
+				<anchored to="coinframe" position="insidetopleft" offset="20,30" width="55" height="20" />
+				<script>
+					function onInit()
+						onValueChanged()
+					end
+					function onValueChanged()
+						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
+					end
+				</script>
+				<delaykeyupdate />
+			</number_dropadd>
+			<stringu name="coinname1" source="coins.slot1.name">
+				<anchored to="coinamount1" position="righthigh" offset="10,0" width="20" />
+				<script>
+					function onValueChanged()
+						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
+					end
+				</script>
+				<default>pp</default>
+				<delaykeyupdate />
+			</stringu>
+
+			<!--Coin Type 2-->
+			<number_dropadd name="coinamount2">
+				<anchored to="coinamount1" position="below" offset="0,6" height="20" />
+				<script>
+					function onValueChanged()
+						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
+					end
+				</script>
+				<delaykeyupdate />
+			</number_dropadd>
+			<stringu name="coinname2" source="coins.slot2.name">
+				<anchored to="coinamount2" position="righthigh" offset="10,0" width="20" />
+				<script>
+					function onValueChanged()
+						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
+					end
+				</script>
+				<default>gp</default>
+				<delaykeyupdate />
+			</stringu>
+
+			<!--Coin Type 3-->
+			<number_dropadd name="coinamount3">
+				<anchored to="coinamount2" position="below" offset="0,6" height="20" />
+				<script>
+					function onValueChanged()
+						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
+					end
+				</script>
+				<delaykeyupdate />
+			</number_dropadd>
+			<stringu name="coinname3" source="coins.slot3.name" merge="replace">
+				<anchored to="coinamount3" position="right" offset="10,0" width="20" />
+				<script>
+					function onValueChanged()
+						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
+					end
+				</script>
+				<default>sp</default>
+				<delaykeyupdate />
+			</stringu>
+
+			<!--Coin Type 4-->
+			<number_dropadd name="coinamount4">
+				<anchored to="coinamount3" position="below" offset="0,6" height="20" />
+				<script>
+					function onValueChanged()
+						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
+					end
+				</script>
+				<delaykeyupdate />
+			</number_dropadd>
+			<stringu name="coinname4" source="coins.slot4.name">
+				<anchored to="coinamount4" position="righthigh" offset="10,0" width="20" />
+				<script>
+					function onValueChanged()
+						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
+					end
+				</script>
+				<default>cp</default>
+				<delaykeyupdate />
+			</stringu>
+
+			<!--Coin Type 5-->
+			<number_dropadd name="coinamount5">
+				<anchored to="coinamount4" position="below" offset="0,6" height="20" />
+				<script>
+					function onValueChanged()
+						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
+					end
+				</script>
+				<delaykeyupdate />
+			</number_dropadd>
+			<stringu name="coinname5" source="coins.slot5.name">
+				<anchored to="coinamount5" position="righthigh" offset="10,0" width="20" />
+				<script>
+					function onValueChanged()
+						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
+					end
+				</script>
+				<delaykeyupdate />
+			</stringu>
+
+			<!--Coin Type 6-->
+			<number_dropadd name="coinamount6">
+				<anchored to="coinamount5" position="below" offset="0,6" height="20" />
+				<script>
+					function onValueChanged()
+						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
+					end
+				</script>
+				<delaykeyupdate />
+			</number_dropadd>
+			<stringu name="coinname6" source="coins.slot6.name">
+				<anchored to="coinamount6" position="righthigh" offset="10,0" width="20" />
+				<script>
+					function onValueChanged()
+						CoinsWeight.onCoinsValueChanged(window.getDatabaseNode())
+					end
+				</script>
+				<delaykeyupdate />
+			</stringu>
+		</sheetdata>
+	</windowclass>
+</root>
