@@ -7,3 +7,4 @@ The default is 1lb / 50coins.
 
 # Compatibility and Instructions
 This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) 4.0.10 (2021-02-04).
+It has been tested with the CoreRPG, Pathfinder 1e, and D&D 3.5E rulesets.
