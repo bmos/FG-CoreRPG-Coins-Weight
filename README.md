@@ -11,7 +11,8 @@ Editing the coinweight.lua file allows setting different weights for different d
 
 *5E*: pp, gp, ep, sp, cp
 
-To get more rulesets added, post in [the forum thread](https://www.fantasygrounds.com/forums/showthread.php?67228-CoreRPG-Coins-Weight) or create [a GitHub issue](https://github.com/bmos/FG-CoreRPG-Coins-Weight/issues/new). Provide the name of your ruleset, a list of the official currencies, and their weight and value (as available).
+To get more rulesets added, post in [the forum thread](https://www.fantasygrounds.com/forums/showthread.php?67228-CoreRPG-Coins-Weight) or create [a GitHub issue](https://github.com/bmos/FG-CoreRPG-Coins-Weight/issues/new).
+Provide the name of your ruleset, a list of the official currencies, and their weight and value (as available).
 
 # Compatibility and Instructions
 This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) 4.0.10 (2021-02-04).
