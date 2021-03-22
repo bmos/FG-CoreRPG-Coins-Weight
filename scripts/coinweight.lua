@@ -4,6 +4,7 @@
 
 --	Set multipliers for different currency denominations. nValue = value multiplier. nWeight = per-coin weight (in pounds -- conversion is automatic)
 local aDenominations = {
+		-- ['ad'] = {['nValue'] = 10000, ['nWeight'] = .01}, -- Astral Diamonds
 		-- ['mp'] = {['nValue'] = 500, ['nWeight'] = .3}, -- Asgurgolas' Mithral Pieces (homebrew)
 		['pp'] = {['nValue'] = 10, ['nWeight'] = .02},
 		['gp'] = {['nValue'] = 1, ['nWeight'] = .02},
