@@ -6,7 +6,9 @@ Editing the coinweight.lua file allows setting different weights for different d
 
 # Included ruleset definitions:
 *Pathfinder/3.5E*: pp, gp, sp, cp
+
 *4E*: ad, pp, gp, sp, cp
+
 *5E*: pp, gp, ep, sp, cp
 
 To get more rulesets added, post in [the forum thread](https://www.fantasygrounds.com/forums/showthread.php?67228-CoreRPG-Coins-Weight) or create [a GitHub issue](https://github.com/bmos/FG-CoreRPG-Coins-Weight/issues/new). Provide the name of your ruleset, a list of the official currencies, and their weight and value (as available).
