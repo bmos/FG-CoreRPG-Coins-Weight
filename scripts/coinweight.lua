@@ -2,18 +2,32 @@
 --	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
 
---	Set multipliers for different currency denominations. nValue = value multiplier. nWeight = per-coin weight (in pounds -- conversion is automatic)
-local aDenominations = {
-		-- ['ad'] = {['nValue'] = 10000, ['nWeight'] = .01}, -- Astral Diamonds
-		-- ['mp'] = {['nValue'] = 500, ['nWeight'] = .3}, -- Asgurgolas' Mithral Pieces (homebrew)
-		['pp'] = {['nValue'] = 10, ['nWeight'] = .02},
-		['gp'] = {['nValue'] = 1, ['nWeight'] = .02},
-		-- ['ep'] = {['nValue'] = .5, ['nWeight'] = .02}, -- Electrum Pieces
-		['sp'] = {['nValue'] = .1, ['nWeight'] = .02},
-		['cp'] = {['nValue'] = .01, ['nWeight'] = .02},
-		-- ['op'] = {['nValue'] = 0, ['nWeight'] = .02}, -- Zygmunt Molotch (homebrew)
-		-- ['jp'] = {['nValue'] = 0, ['nWeight'] = .02}, -- Zygmunt Molotch (homebrew)
-	}
+local aDenominations = {}
+function onInit()
+	local sRuleset = User.getRulesetName()
+	--	Set multipliers for different currency denominations. nValue = value multiplier. nWeight = per-coin weight (in pounds)
+	if sRuleset == "3.5E" or sRuleset == "PFRPG" then
+		--aDenominations['mp'] = { ['nValue'] = 500, ['nWeight'] = .3} -- Asgurgolas' Mithral Pieces (homebrew)
+		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02}
+		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02}
+		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02}
+		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02}
+		--aDenominations['op'] = { ['nValue'] = 0, ['nWeight'] = .02} -- Zygmunt Molotch (homebrew)
+		--aDenominations['jp'] = { ['nValue'] = 0, ['nWeight'] = .02} -- Zygmunt Molotch (homebrew)
+	elseif sRuleset == "5E" then
+		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02}
+		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02}
+		aDenominations['ep'] = { ['nValue'] = .5, ['nWeight'] = .02}
+		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02}
+		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02}
+	elseif sRuleset == "4E" then
+		aDenominations['ad'] = { ['nValue'] = 10000, ['nWeight'] = .01}
+		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02}
+		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02}
+		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02}
+		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02}
+	end
+end
 	
 ---	Calculate weight of all coins and total value (in gp).
 --	@param nodeChar databasenode of PC within charsheet
@@ -25,7 +39,7 @@ local function computeCoins(nodeChar)
 		local sDenomination = string.lower(DB.getValue(nodeCoinSlot, 'name', ''))
 		local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
 
-		-- upgrade method to support removing second coins column
+		-- upgrade method to support removing second coins column - probably not needed anymore
 		if DB.getValue(nodeCoinSlot, 'amountA') and DB.getValue(nodeCoinSlot, 'amountA', 0) ~= 0 then
 			nCoinAmount = nCoinAmount + DB.getValue(nodeCoinSlot, 'amountA', 0)
 			DB.setValue(nodeCoinSlot, 'amount', 'number', nCoinAmount)
@@ -34,7 +48,7 @@ local function computeCoins(nodeChar)
 
 		if sDenomination ~= '' then
 			for sDenominationName,tDenominationData in pairs(aDenominations) do
-				if string.match(sDenomination, sDenominationName) then
+				if string.match(sDenomination, string.lower(sDenominationName)) then
 					nWealth = nWealth + (nCoinAmount * tDenominationData['nValue'])
 					nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * tDenominationData['nWeight'])
 				end
