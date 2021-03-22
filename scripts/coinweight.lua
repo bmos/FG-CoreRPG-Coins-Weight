@@ -22,7 +22,7 @@ function onInit()
 		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02}
 	elseif sRuleset == "4E" then
 		aDenominations['ad'] = { ['nValue'] = 10000, ['nWeight'] = .01}
-		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02}
+		aDenominations['pp'] = { ['nValue'] = 100, ['nWeight'] = .02}
 		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02}
 		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02}
 		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02}
