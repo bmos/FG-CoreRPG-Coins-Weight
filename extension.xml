@@ -21,5 +21,8 @@
 
 		<!-- Scripts -->
 		<script name="CoinsWeight" file="scripts/coinweight.lua" />
+
+		<!-- Coins Description -->
+		<string name="item_description_coins"><p>A standard coin weighs about a third of an ounce (50 to the pound).</p></string>
 	</base>
 </root>
