@@ -7,25 +7,25 @@ function onInit()
 	local sRuleset = User.getRulesetName()
 	--	Set multipliers for different currency denominations. nValue = value multiplier. nWeight = per-coin weight (in pounds)
 	if sRuleset == "3.5E" or sRuleset == "PFRPG" then
-		--aDenominations['mp'] = { ['nValue'] = 500, ['nWeight'] = .3} -- Asgurgolas' Mithral Pieces (homebrew)
-		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02}
-		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02}
-		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02}
-		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02}
-		--aDenominations['op'] = { ['nValue'] = 0, ['nWeight'] = .02} -- Zygmunt Molotch (homebrew)
-		--aDenominations['jp'] = { ['nValue'] = 0, ['nWeight'] = .02} -- Zygmunt Molotch (homebrew)
+		--aDenominations['mp'] = { ['nValue'] = 500, ['nWeight'] = .3 } -- Asgurgolas' Mithral Pieces (homebrew)
+		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
+		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
+		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
+		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
+		--aDenominations['op'] = { ['nValue'] = 0, ['nWeight'] = .02 } -- Zygmunt Molotch (homebrew)
+		--aDenominations['jp'] = { ['nValue'] = 0, ['nWeight'] = .02 } -- Zygmunt Molotch (homebrew)
 	elseif sRuleset == "5E" then
-		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02}
-		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02}
-		aDenominations['ep'] = { ['nValue'] = .5, ['nWeight'] = .02}
-		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02}
-		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02}
+		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
+		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
+		aDenominations['ep'] = { ['nValue'] = .5, ['nWeight'] = .02 }
+		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
+		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
 	elseif sRuleset == "4E" then
-		aDenominations['ad'] = { ['nValue'] = 10000, ['nWeight'] = .002}
-		aDenominations['pp'] = { ['nValue'] = 100, ['nWeight'] = .02}
-		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02}
-		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02}
-		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02}
+		aDenominations['ad'] = { ['nValue'] = 10000, ['nWeight'] = .002 }
+		aDenominations['pp'] = { ['nValue'] = 100, ['nWeight'] = .02 }
+		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
+		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
+		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
 	end
 end
 	
@@ -56,8 +56,8 @@ local function computeCoins(nodeChar)
 		end
 	end
 
-	local nTotalCoinWeightToSet = math.floor(nTotalCoinsWeight)
-	if nTotalCoinWeightToSet then
+	if nTotalCoinsWeight then
+		local nTotalCoinWeightToSet = math.floor(nTotalCoinsWeight)
 		local nodeOtherCoins
 		for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
 			local sItemName = DB.getValue(nodeItem, 'name', '')
