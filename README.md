@@ -11,7 +11,7 @@ Users of [damned](https://www.fantasygrounds.com/forums/member.php?19192-damned)
 # Features
 It does this by adding a "Coins" inventory item of the appropriate weight and setting the cost of this item to the total value of all coins.
 This "Coins" inventory entry can be marked uncarried or put into a bag of holding (if using my [extraplanar containers](https://www.fantasygrounds.com/forums/showthread.php?67126-PFRPG-Extraplanar-Containers) extension) to negate the weight.
-Editing the coinweight.lua file allows setting different weights for different denominations.
+Editing the [coinweight.lua](https://github.com/bmos/FG-CoreRPG-Coins-Weight/blob/main/scripts/coinweight.lua#L6) file allows setting different weights for different denominations.
 
 # Included ruleset definitions:
 *Pathfinder/3.5E*: pp, gp, sp, cp
