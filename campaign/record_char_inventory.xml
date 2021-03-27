@@ -5,6 +5,7 @@
 -->
 
 <root>
+	<!-- This is the inventory tab -->
 	<windowclass name="charsheet_inventory" merge="join">
 		<sheetdata>
 			<!--Coin Type 1-->

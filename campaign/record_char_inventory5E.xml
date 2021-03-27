@@ -5,6 +5,7 @@
 -->
 
 <root>
+	<!-- This is the inventory tab. Only difference from 3.5E is the name used. -->
 	<windowclass name="charsheet_inventory_contents" merge="join">
 		<sheetdata>
 			<!--Coin Type 1-->
