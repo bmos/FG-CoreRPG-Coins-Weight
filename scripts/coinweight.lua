@@ -3,17 +3,20 @@
 --
 
 local aDenominations = {}
+---	On initializing, the script checks what the current ruleset is.
+--	It then loads the correct denominations into the aDenominations table.
 function onInit()
 	local sRuleset = User.getRulesetName()
-	--	Set multipliers for different currency denominations. nValue = value multiplier. nWeight = per-coin weight (in pounds)
+	-- Set multipliers for different currency denominations.
+	-- nValue = value multiplier. nWeight = per-coin weight (in pounds)
 	if sRuleset == "3.5E" or sRuleset == "PFRPG" then
-		--aDenominations['mp'] = { ['nValue'] = 500, ['nWeight'] = .3 } -- Asgurgolas' Mithral Pieces (homebrew)
+		-- aDenominations['mp'] = { ['nValue'] = 500, ['nWeight'] = .3 } -- Asgurgolas' Mithral Pieces (homebrew)
 		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
 		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
 		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
 		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
-		--aDenominations['op'] = { ['nValue'] = 0, ['nWeight'] = .02 } -- Zygmunt Molotch (homebrew)
-		--aDenominations['jp'] = { ['nValue'] = 0, ['nWeight'] = .02 } -- Zygmunt Molotch (homebrew)
+		-- aDenominations['op'] = { ['nValue'] = 0, ['nWeight'] = .02 } -- Zygmunt Molotch (homebrew)
+		-- aDenominations['jp'] = { ['nValue'] = 0, ['nWeight'] = .02 } -- Zygmunt Molotch (homebrew)
 	elseif sRuleset == "5E" then
 		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
 		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
@@ -29,7 +32,9 @@ function onInit()
 	end
 end
 
--- upgrade method to support removing second coins column - probably not needed anymore
+---	This function imports the data from the second column of coins used in damned's coins weight extension.
+--	bmos also used this data structure in an early version of Total Encumbrance.
+--	Once imported, the original database nodes are deleted.
 local function upgradeDamnedCoinWeight(nodeCoinSlot)
 	if DB.getValue(nodeCoinSlot, 'amountA') and DB.getValue(nodeCoinSlot, 'amountA', 0) ~= 0 then
 		nCoinAmount = nCoinAmount + DB.getValue(nodeCoinSlot, 'amountA', 0)
@@ -38,6 +43,8 @@ local function upgradeDamnedCoinWeight(nodeCoinSlot)
 	end
 end
 
+--	This function creates the "Coins" item in a PC's inventory.
+--	It populates the name, type, and description and then returns the database node.
 local function createCoinsItem(nodeChar)
 	local nodeCoinsItem = DB.createChild(nodeChar.getChild('inventorylist'))
 	DB.setValue(nodeCoinsItem, 'name', 'string', 'Coins')
@@ -47,8 +54,13 @@ local function createCoinsItem(nodeChar)
 	return nodeCoinsItem
 end
 	
----	Calculate weight of all coins and total value (in gp).
---	@param nodeChar databasenode of PC within charsheet
+---	This function calculates the weight of all coins and their total value (in gp).
+--	It looks at each coins database subnode and checks them for the data of other extensions.
+--	Then, it checks their denominations agains those defined in aDenominations.
+--	If it doesn't find a match, it assumes a coin weight of .02.
+--	It then looks for an item in the inventory called "Coins"
+--	If it doesn't find it, and the weight or value total is not zero, it creates it.
+--	
 local function computeCoins(nodeChar)
 	local nTotalCoinsWeight, nTotalCoinsWealth = 0, 0
 
@@ -56,7 +68,7 @@ local function computeCoins(nodeChar)
 		local sDenomination = string.lower(DB.getValue(nodeCoinSlot, 'name', ''))
 		local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
 
-		-- upgrade method to support removing second coins column - probably not needed anymore
+		-- import data from other extensions
 		upgradeDamnedCoinWeight(nodeCoinSlot)
 
 		if sDenomination ~= '' then
@@ -66,9 +78,12 @@ local function computeCoins(nodeChar)
 					nTotalCoinsWeight = math.floor(nTotalCoinsWeight + (nCoinAmount * tDenominationData['nWeight']))
 				end
 			end
+		else
+			nTotalCoinsWeight = math.floor(nTotalCoinsWeight + (nCoinAmount * .02))
 		end
 	end
 
+	-- this looks for the "Coins" inventory if it already exists
 	local nodeCoinsItem
 	for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
 		local sItemName = DB.getValue(nodeItem, 'name', '')
