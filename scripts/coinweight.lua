@@ -91,17 +91,18 @@ local function computeCoins(nodeChar)
 			nodeCoinsItem = nodeItem
 		end
 	end
-	if nTotalCoinsWeight then
-		if nTotalCoinsWeight ~= 0 and not nodeCoinsItem then
-			nodeCoinsItem = createCoinsItem(nodeChar)
-		elseif nTotalCoinsWeight == 0 and nodeCoinsItem then
-			nodeCoinsItem.delete()
-		elseif nTotalCoinsWeight < 0 and nodeCoinsItem then
-			DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
-		elseif nodeCoinsItem then
-			DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
-			DB.setValue(nodeCoinsItem, 'weight', 'number', nTotalCoinsWeight)
-		end
+	
+	if (nTotalCoinsWeight > 0 or nTotalCoinsWealth ~= 0) and not nodeCoinsItem then
+		nodeCoinsItem = createCoinsItem(nodeChar)
+	end
+	if (nTotalCoinsWeight <= 0 and nTotalCoinsWealth == 0) and nodeCoinsItem then
+		nodeCoinsItem.delete()
+	elseif nTotalCoinsWeight < 0 and nodeCoinsItem then
+		DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
+		DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
+	elseif nodeCoinsItem then
+		DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
+		DB.setValue(nodeCoinsItem, 'weight', 'number', nTotalCoinsWeight)
 	end
 end
 
