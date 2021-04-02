@@ -8,11 +8,6 @@
 		<version>1.2</version>
 		<author>bmos (Wil Thieme)</author>
 		<description>Calculates coin weight by leveraging existing inventory weight process.</description>
-		<ruleset name="CoreRPG" />
-		<ruleset name="PFRPG" />
-		<ruleset name="3.5E" />
-		<ruleset name="4E" />
-		<ruleset name="5E" />
 	</properties>
 
 	<announcement text="Coin Weight v1.2:\rCalculates coin weight by leveraging existing inventory weight process." font="emotefont" />
