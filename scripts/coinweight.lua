@@ -49,7 +49,7 @@ local function createCoinsItem(nodeChar)
 	local nodeCoinsItem = DB.createChild(nodeChar.getChild('inventorylist'))
 	DB.setValue(nodeCoinsItem, 'name', 'string', 'Coins')
 	DB.setValue(nodeCoinsItem, 'type', 'string', 'Wealth and Money')
-	DB.setValue(nodeCoinsItem, 'description', 'string', Interface.getString("item_description_coins"))
+	DB.setValue(nodeCoinsItem, 'description', 'formattedtext', Interface.getString("item_description_coins"))
 	
 	return nodeCoinsItem
 end
