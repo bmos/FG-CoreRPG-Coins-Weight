@@ -9,7 +9,7 @@ function onInit()
 	local sRuleset = User.getRulesetName()
 	-- Set multipliers for different currency denominations.
 	-- nValue = value multiplier. nWeight = per-coin weight (in pounds)
-	if sRuleset == "3.5E" or sRuleset == "PFRPG" then
+	if sRuleset == "3.5E" or sRuleset == "PFRPG" or sRuleset == "PFRPG2" then
 		-- aDenominations['mp'] = { ['nValue'] = 500, ['nWeight'] = .3 } -- Asgurgolas' Mithral Pieces (homebrew)
 		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
 		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
