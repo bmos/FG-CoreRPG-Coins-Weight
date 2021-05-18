@@ -110,7 +110,6 @@ local function computeCoins(nodeChar)
 				if string.match(sDenomination, string.lower(sDenominationName)) then
 					nTotalCoinsWealth = nTotalCoinsWealth + (nCoinAmount * tDenominationData['nValue'])
 					nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * tDenominationData['nWeight'])
-					Debug.chat(nTotalCoinsWeight, nCoinAmount, tDenominationData['nWeight'])
 				end
 			end
 		else
