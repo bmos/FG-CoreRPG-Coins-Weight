@@ -61,7 +61,7 @@ end
 --	Otherwise, it recommends 3.
 --	This maximizes difficulty at low levels when it has the most impact.
 --	The intent is to keep the number visible on the inventory list without clipping.
-local function determineRounding(nTotalCoinsWealth)
+local function determineRounding(nTotalCoinsWeight)
 	if nTotalCoinsWeight >= 100 then
 		return 0
 	elseif nTotalCoinsWeight >= 10 then
