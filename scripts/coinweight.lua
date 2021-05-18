@@ -63,14 +63,32 @@ local function round(number, decimals)
     if number >= 0 then number = math.floor(number + 0.5) else number = math.ceil(number - 0.5) end
     return number / n
 end
-	
+
+local function determineRounding(nTotalCoinsWealth)
+	if nTotalCoinsWeight >= 100 then
+		return 0
+	elseif nTotalCoinsWeight >= 10 then
+		return 1
+	else
+		return 2
+	end 
+end
+
+local function findCoinsItem(nodeChar)
+	for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
+		local sItemName = DB.getValue(nodeItem, 'name', '')
+		if sItemName == 'Coins' then
+			return nodeItem
+		end
+	end
+end
+
 ---	This function calculates the weight of all coins and their total value (in gp).
 --	It looks at each coins database subnode and checks them for the data of other extensions.
 --	Then, it checks their denominations agains those defined in aDenominations.
 --	If it doesn't find a match, it assumes a coin weight of .02.
 --	It then looks for an item in the inventory called "Coins"
 --	If it doesn't find it, and the weight or value total is not zero, it creates it.
---	
 local function computeCoins(nodeChar)
 	local nTotalCoinsWeight, nTotalCoinsWealth = 0, 0
 
@@ -93,22 +111,7 @@ local function computeCoins(nodeChar)
 		end
 	end
 
-	-- this looks for the "Coins" inventory if it already exists
-	local nodeCoinsItem
-	for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
-		local sItemName = DB.getValue(nodeItem, 'name', '')
-		if sItemName == 'Coins' then
-			nodeCoinsItem = nodeItem
-		end
-	end
-	
-	local nRoundTo = 2
-	if nTotalCoinsWeight >= 100 then
-		nRoundTo = 0
-	elseif nTotalCoinsWeight >= 10 then
-		nRoundTo = 1
-	end
-
+	local nodeCoinsItem = findCoinsItem(nodeChar)
 	if (nTotalCoinsWeight > 0 or nTotalCoinsWealth ~= 0) and not nodeCoinsItem then
 		nodeCoinsItem = createCoinsItem(nodeChar)
 	end
@@ -119,7 +122,7 @@ local function computeCoins(nodeChar)
 		DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
 	elseif nodeCoinsItem then
 		DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
-		DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, nRoundTo))
+		DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding(nTotalCoinsWealth)))
 	end
 end
 
