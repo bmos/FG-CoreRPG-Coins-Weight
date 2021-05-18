@@ -2,6 +2,7 @@
 --	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
 
+local nDefaultWeight = .02
 local aDenominations = {}
 ---	On initializing, the script checks what the current ruleset is.
 --	It then loads the correct denominations into the aDenominations table.
@@ -130,7 +131,7 @@ local function computeCoins(nodeChar)
 				end
 			end
 		else
-			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * .02)
+			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * nDefaultWeight)
 		end
 	end
 	writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
