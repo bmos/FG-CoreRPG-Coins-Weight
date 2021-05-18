@@ -36,8 +36,10 @@ end
 --	bmos also used this data structure in an early version of Total Encumbrance.
 --	Once imported, the original database nodes are deleted.
 local function upgradeDamnedCoinWeight(nodeCoinSlot)
-	if DB.getValue(nodeCoinSlot, 'amountA') and DB.getValue(nodeCoinSlot, 'amountA', 0) ~= 0 then
-		local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0) + DB.getValue(nodeCoinSlot, 'amountA', 0)
+	local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
+	local nCoinAmount2 = DB.getValue(nodeCoinSlot, 'amountA', 0)
+	if nCoinAmount2 ~= 0 then
+		local nCoinAmount = nCoinAmount + nCoinAmount2
 		DB.setValue(nodeCoinSlot, 'amount', 'number', nCoinAmount)
 		if DB.getValue(nodeCoinSlot, 'amountA') then nodeCoinSlot.getChild('amountA').delete() end
 	end
