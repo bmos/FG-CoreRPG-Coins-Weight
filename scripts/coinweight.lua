@@ -107,7 +107,7 @@ local function writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
 		DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
 	elseif nodeCoinsItem then
 		DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
-		DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding(nTotalCoinsWealth)))
+		DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding(nTotalCoinsWeight)))
 	end
 end
 
