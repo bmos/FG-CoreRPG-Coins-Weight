@@ -37,7 +37,7 @@ end
 --	Once imported, the original database nodes are deleted.
 local function upgradeDamnedCoinWeight(nodeCoinSlot)
 	if DB.getValue(nodeCoinSlot, 'amountA') and DB.getValue(nodeCoinSlot, 'amountA', 0) ~= 0 then
-		nCoinAmount = nCoinAmount + DB.getValue(nodeCoinSlot, 'amountA', 0)
+		local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0) + DB.getValue(nodeCoinSlot, 'amountA', 0)
 		DB.setValue(nodeCoinSlot, 'amount', 'number', nCoinAmount)
 		if DB.getValue(nodeCoinSlot, 'amountA') then nodeCoinSlot.getChild('amountA').delete() end
 	end
@@ -65,12 +65,11 @@ local function computeCoins(nodeChar)
 	local nTotalCoinsWeight, nTotalCoinsWealth = 0, 0
 
 	for _,nodeCoinSlot in pairs(DB.getChildren(nodeChar, 'coins')) do
-		local sDenomination = string.lower(DB.getValue(nodeCoinSlot, 'name', ''))
-		local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
-
 		-- import data from other extensions
 		upgradeDamnedCoinWeight(nodeCoinSlot)
 
+		local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
+		local sDenomination = string.lower(DB.getValue(nodeCoinSlot, 'name', ''))
 		if sDenomination ~= '' then
 			for sDenominationName,tDenominationData in pairs(aDenominations) do
 				if string.match(sDenomination, string.lower(sDenominationName)) then
