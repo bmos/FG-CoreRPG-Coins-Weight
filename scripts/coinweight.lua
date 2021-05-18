@@ -55,6 +55,14 @@ local function createCoinsItem(nodeChar)
 	
 	return nodeCoinsItem
 end
+
+---	This function rounds to the specified number of decimals
+local function round(number, decimals)
+    local n = 10^(decimals or 0)
+    number = number * n
+    if number >= 0 then number = math.floor(number + 0.5) else number = math.ceil(number - 0.5) end
+    return number / n
+end
 	
 ---	This function calculates the weight of all coins and their total value (in gp).
 --	It looks at each coins database subnode and checks them for the data of other extensions.
@@ -76,11 +84,12 @@ local function computeCoins(nodeChar)
 			for sDenominationName,tDenominationData in pairs(aDenominations) do
 				if string.match(sDenomination, string.lower(sDenominationName)) then
 					nTotalCoinsWealth = nTotalCoinsWealth + (nCoinAmount * tDenominationData['nValue'])
-					nTotalCoinsWeight = math.floor(nTotalCoinsWeight + (nCoinAmount * tDenominationData['nWeight']))
+					nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * tDenominationData['nWeight'])
+					Debug.chat(nTotalCoinsWeight, nCoinAmount, tDenominationData['nWeight'])
 				end
 			end
 		else
-			nTotalCoinsWeight = math.floor(nTotalCoinsWeight + (nCoinAmount * .02))
+			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * .02)
 		end
 	end
 
@@ -93,6 +102,13 @@ local function computeCoins(nodeChar)
 		end
 	end
 	
+	local nRoundTo = 2
+	if nTotalCoinsWeight >= 100 then
+		nRoundTo = 0
+	elseif nTotalCoinsWeight >= 10 then
+		nRoundTo = 1
+	end
+
 	if (nTotalCoinsWeight > 0 or nTotalCoinsWealth ~= 0) and not nodeCoinsItem then
 		nodeCoinsItem = createCoinsItem(nodeChar)
 	end
@@ -103,7 +119,7 @@ local function computeCoins(nodeChar)
 		DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
 	elseif nodeCoinsItem then
 		DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
-		DB.setValue(nodeCoinsItem, 'weight', 'number', nTotalCoinsWeight)
+		DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, nRoundTo))
 	end
 end
 
