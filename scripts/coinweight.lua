@@ -8,7 +8,7 @@ local aDenominations = {}
 function onInit()
 	local sRuleset = User.getRulesetName()
 	-- Set multipliers for different currency denominations.
-	-- nValue = value multiplier. nWeight = per-coin weight (in pounds)
+	-- nValue = per-coin value multiplier. nWeight = per-coin weight multiplier (in pounds)
 	if sRuleset == "3.5E" or sRuleset == "PFRPG" or sRuleset == "PFRPG2" then
 		-- aDenominations['mp'] = { ['nValue'] = 500, ['nWeight'] = .3 } -- Asgurgolas' Mithral Pieces (homebrew)
 		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
@@ -64,6 +64,12 @@ local function round(number, decimals)
     return number / n
 end
 
+--- This function figures out how many decimal places to round to.
+--	If the total weight is greater than or equal to 10, it rounds to 1 decimal place.
+--	If it's greater than or equal to 100, it rounds to whole numbers.
+--	If it's less than 10, it rounds to 2 decimal places.
+--	This maximizes difficulty at low levels when it has the most impact.
+--	At higher weights, the intent is to keep the data visible on the inventory list.
 local function determineRounding(nTotalCoinsWealth)
 	if nTotalCoinsWeight >= 100 then
 		return 0
@@ -74,6 +80,7 @@ local function determineRounding(nTotalCoinsWealth)
 	end 
 end
 
+---	This function looks for the "Coins" inventory item if it already exists.
 local function findCoinsItem(nodeChar)
 	for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
 		local sItemName = DB.getValue(nodeItem, 'name', '')
