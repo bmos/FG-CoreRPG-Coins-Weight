@@ -4,34 +4,6 @@
 
 local nDefaultWeight = .02
 local aDenominations = {}
----	On initializing, the script checks what the current ruleset is.
---	It then loads the correct denominations into the aDenominations table.
-function onInit()
-	local sRuleset = User.getRulesetName()
-	-- Set multipliers for different currency denominations.
-	-- nValue = per-coin value multiplier. nWeight = per-coin weight multiplier (in pounds)
-	if sRuleset == "3.5E" or sRuleset == "PFRPG" or sRuleset == "PFRPG2" then
-		-- aDenominations['mp'] = { ['nValue'] = 500, ['nWeight'] = .3 } -- Asgurgolas' Mithral Pieces (homebrew)
-		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
-		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
-		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
-		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
-		-- aDenominations['op'] = { ['nValue'] = 0, ['nWeight'] = .02 } -- Zygmunt Molotch (homebrew)
-		-- aDenominations['jp'] = { ['nValue'] = 0, ['nWeight'] = .02 } -- Zygmunt Molotch (homebrew)
-	elseif sRuleset == "5E" then
-		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
-		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
-		aDenominations['ep'] = { ['nValue'] = .5, ['nWeight'] = .02 }
-		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
-		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
-	elseif sRuleset == "4E" then
-		aDenominations['ad'] = { ['nValue'] = 10000, ['nWeight'] = .002 }
-		aDenominations['pp'] = { ['nValue'] = 100, ['nWeight'] = .02 }
-		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
-		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
-		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
-	end
-end
 
 ---	This function imports the data from the second column of coins used in damned's coins weight extension.
 --	bmos also used this data structure in an early version of Total Encumbrance.
@@ -138,6 +110,43 @@ local function computeCoins(nodeChar)
 end
 
 --	This function is called when a coin field is changed
-function onCoinsValueChanged(nodeChar)
-	computeCoins(nodeChar)
+local function onCoinsValueChanged(nodeCoinData)
+	local nodeChar = nodeCoinData.getChild('...')
+	if nodeChar.getParent().getName() == 'charsheet' then
+		computeCoins(nodeChar)
+	end
+end
+
+---	On initializing, the script checks what the current ruleset is.
+--	It then loads the correct denominations into the aDenominations table.
+--	Then it configures a database node handler to watch for changes to coin data.
+function onInit()
+	local sRuleset = User.getRulesetName()
+	-- Set multipliers for different currency denominations.
+	-- nValue = per-coin value multiplier. nWeight = per-coin weight multiplier (in pounds)
+	if sRuleset == "3.5E" or sRuleset == "PFRPG" or sRuleset == "PFRPG2" then
+		-- aDenominations['mp'] = { ['nValue'] = 500, ['nWeight'] = .3 } -- Asgurgolas' Mithral Pieces (homebrew)
+		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
+		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
+		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
+		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
+		-- aDenominations['op'] = { ['nValue'] = 0, ['nWeight'] = .02 } -- Zygmunt Molotch (homebrew)
+		-- aDenominations['jp'] = { ['nValue'] = 0, ['nWeight'] = .02 } -- Zygmunt Molotch (homebrew)
+	elseif sRuleset == "5E" then
+		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
+		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
+		aDenominations['ep'] = { ['nValue'] = .5, ['nWeight'] = .02 }
+		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
+		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
+	elseif sRuleset == "4E" then
+		aDenominations['ad'] = { ['nValue'] = 10000, ['nWeight'] = .002 }
+		aDenominations['pp'] = { ['nValue'] = 100, ['nWeight'] = .02 }
+		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
+		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
+		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
+	end
+	
+	if Session.IsHost then
+		DB.addHandler("charsheet.*.coins.*", "onChildUpdate", onCoinsValueChanged)
+	end
 end
