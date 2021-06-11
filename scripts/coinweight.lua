@@ -2,9 +2,6 @@
 --	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
 
-local nDefaultCoinWeight = .02
-aDenominations = {}
-
 ---	This function imports the data from the second column of coins used in damned's coins weight extension.
 --	bmos also used this data structure in an early version of Total Encumbrance.
 --	Once imported, the original database nodes are deleted.
@@ -120,6 +117,8 @@ end
 ---	On initializing, the script checks what the current ruleset is.
 --	It then loads the correct denominations into the aDenominations table.
 --	Then it configures a database node handler to watch for changes to coin data.
+nDefaultCoinWeight = .02
+aDenominations = {}
 function onInit()
 	local sRuleset = User.getRulesetName()
 	-- Set multipliers for different currency denominations.
