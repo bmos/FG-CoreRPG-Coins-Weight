@@ -2,8 +2,8 @@
 --	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
 
-local nDefaultWeight = .02
-local aDenominations = {}
+local nDefaultCoinWeight = .02
+aDenominations = {}
 
 ---	This function imports the data from the second column of coins used in damned's coins weight extension.
 --	bmos also used this data structure in an early version of Total Encumbrance.
@@ -103,7 +103,7 @@ local function computeCoins(nodeChar)
 				end
 			end
 		else
-			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * nDefaultWeight)
+			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * nDefaultCoinWeight)
 		end
 	end
 	writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
