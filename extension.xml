@@ -5,12 +5,12 @@
 <root version='3.3' release='3'>
 	<properties>
 		<name>Coins Weight</name>
-		<version>1.4</version>
+		<version>1.5</version>
 		<author>bmos (Wil Thieme)</author>
 		<description>Calculates coin weight by leveraging the existing inventory weight process.</description>
 	</properties>
 
-	<announcement text="Coin Weight v1.4:\rCalculates coin weight by leveraging the existing inventory weight process." font="emotefont" />
+	<announcement text="Coin Weight v1.5:\rCalculates coin weight by leveraging the existing inventory weight process." font="emotefont" />
 
 	<base>
 		<!-- Scripts -->
