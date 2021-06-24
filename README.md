@@ -2,7 +2,7 @@
 This extension calculates coin weight and total monetary wealth.
 
 # Compatibility and Instructions
-This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) 4.0.10 (2021-02-04).
+This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) 4.1.4 (2020-06-08).
 
 It has been tested with the CoreRPG, Pathfinder 1e, D&D 3.5E, and 5E rulesets.
 
