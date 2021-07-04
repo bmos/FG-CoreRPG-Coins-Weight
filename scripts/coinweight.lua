@@ -45,11 +45,14 @@ end
 --	This function creates the "Coins" item in a PC's inventory.
 --	It populates the name, type, and description and then returns the database node.
 local function createCoinsItem(nodeChar)
-	local nodeCoinsItem = DB.createChild(nodeChar.getChild('inventorylist'))
-	DB.setValue(nodeCoinsItem, 'name', 'string', 'Coins')
-	DB.setValue(nodeCoinsItem, 'type', 'string', 'Wealth and Money')
-	DB.setValue(nodeCoinsItem, 'description', 'formattedtext', Interface.getString("item_description_coins"))
-	
+	local nodeCoinsItem
+	if nodeChar.getParent().getName() == 'charsheet' then
+		nodeCoinsItem = DB.createChild(nodeChar.createChild('inventorylist'))
+		DB.setValue(nodeCoinsItem, 'name', 'string', 'Coins')
+		DB.setValue(nodeCoinsItem, 'type', 'string', 'Wealth and Money')
+		DB.setValue(nodeCoinsItem, 'description', 'formattedtext', Interface.getString("item_description_coins"))
+	end
+
 	return nodeCoinsItem
 end
 
