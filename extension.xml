@@ -4,7 +4,7 @@
 
 <root version='3.3' release='3'>
 	<properties>
-		<name>Coins Weight</name>
+		<name>Feature: Coins Weight</name>
 		<version>1.6</version>
 		<author>bmos (Wil Thieme)</author>
 		<description>Calculates coin weight by leveraging the existing inventory weight process.</description>
