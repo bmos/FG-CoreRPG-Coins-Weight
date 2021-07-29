@@ -127,13 +127,10 @@ function onInit()
 	-- Set multipliers for different currency denominations.
 	-- nValue = per-coin value multiplier. nWeight = per-coin weight multiplier (in pounds)
 	if sRuleset == "3.5E" or sRuleset == "PFRPG" or sRuleset == "PFRPG2" then
-		-- aDenominations['mp'] = { ['nValue'] = 500, ['nWeight'] = .3 } -- Asgurgolas' Mithral Pieces (homebrew)
 		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
 		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
 		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
 		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
-		-- aDenominations['op'] = { ['nValue'] = 0, ['nWeight'] = .02 } -- Zygmunt Molotch (homebrew)
-		-- aDenominations['jp'] = { ['nValue'] = 0, ['nWeight'] = .02 } -- Zygmunt Molotch (homebrew)
 	elseif sRuleset == "5E" then
 		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
 		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
