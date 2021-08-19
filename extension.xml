@@ -10,7 +10,7 @@
 		<description>Calculates coin weight by leveraging the existing inventory weight process.</description>
 	</properties>
 
-	<announcement text="Coin Weight v1.6:\rCalculates coin weight by leveraging the existing inventory weight process." font="emotefont" />
+	<announcement text="https://www.fantasygrounds.com/forums/showthread.php?67228-CoreRPG-Coins-Weight\rCoin Weight v1.6:\rCalculates coin weight by leveraging the existing inventory weight process." font="emotefont" />
 
 	<base>
 		<!-- Scripts -->
