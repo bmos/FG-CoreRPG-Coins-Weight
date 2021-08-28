@@ -5,12 +5,12 @@
 <root version='3.3' release='3'>
 	<properties>
 		<name>Feature: Coins Weight</name>
-		<version>1.6</version>
+		<version>1.7</version>
 		<author>bmos (Wil Thieme)</author>
 		<description>Calculates coin weight by leveraging the existing inventory weight process.</description>
 	</properties>
 
-	<announcement text="https://www.fantasygrounds.com/forums/showthread.php?67228-CoreRPG-Coins-Weight\rCoin Weight v1.6:\rCalculates coin weight by leveraging the existing inventory weight process." font="emotefont" />
+	<announcement text="https://www.fantasygrounds.com/forums/showthread.php?67228-CoreRPG-Coins-Weight\rCoin Weight v1.7:\rCalculates coin weight by leveraging the existing inventory weight process." font="emotefont" />
 
 	<base>
 		<!-- Scripts -->
