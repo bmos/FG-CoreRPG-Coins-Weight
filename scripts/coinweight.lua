@@ -143,6 +143,38 @@ function onInit()
 		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
 		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
 		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
+	elseif sRuleset == "DFRPG" then
+		aDenominations['copper'] = { ['nValue'] = 1, ['nWeight'] = .02 }
+		aDenominations['silver'] = { ['nValue'] = 20, ['nWeight'] = .02 }
+		aDenominations['gold'] = { ['nValue'] = 400, ['nWeight'] = .02 }
+		aDenominations['platinum'] = { ['nValue'] = 800, ['nWeight'] = .02 }
+
+		aDenominations['1/2 gold'] = { ['nValue'] = 200, ['nWeight'] = 0.01 }
+		aDenominations['1/4 gold'] = { ['nValue'] = 100, ['nWeight'] = 0.005 }
+		aDenominations['1/8 gold'] = { ['nValue'] = 50, ['nWeight'] = 0.0025 }
+
+		aDenominations['billion'] = { ['nValue'] = 10, ['nWeight'] = .02 }
+		aDenominations['tumbaga'] = { ['nValue'] = 60, ['nWeight'] = .02 }
+		aDenominations['electrum'] = { ['nValue'] = 200, ['nWeight'] = .02 }
+	elseif sRuleset == "GURPS DF" or sRuleset == "DF" then
+		aDenominations['copper'] = { ['nValue'] = 1, ['nWeight'] = 0.016 }
+		aDenominations['copper farthing'] = { ['nValue'] = 1, ['nWeight'] = 0.016 }
+		aDenominations['farthing'] = { ['nValue'] = 1, ['nWeight'] = 0.016 }
+		aDenominations['cf'] = { ['nValue'] = 1, ['nWeight'] = 0.016 }
+
+		aDenominations['silver'] = { ['nValue'] = 4, ['nWeight'] = 0.004 }
+		aDenominations['silver penny'] = { ['nValue'] = 4, ['nWeight'] = 0.004 }
+		aDenominations['penny'] = { ['nValue'] = 4, ['nWeight'] = 0.004 }
+		aDenominations['sp'] = { ['nValue'] = 4, ['nWeight'] = 0.004 }
+
+		aDenominations['gold'] = { ['nValue'] = 80, ['nWeight'] = 0.004 }
+		aDenominations['gold piece'] = { ['nValue'] = 80, ['nWeight'] = 0.004 }
+		aDenominations['gp'] = { ['nValue'] = 80, ['nWeight'] = 0.004 }
+
+		aDenominations['billon'] = { ['nValue'] = 10, ['nWeight'] = 0.02 }
+		aDenominations['tumbaga'] = { ['nValue'] = 62, ['nWeight'] = 0.02 }
+		aDenominations['electrum'] = { ['nValue'] = 210, ['nWeight'] = 0.02 }
+		aDenominations['platinum'] = { ['nValue'] = 600, ['nWeight'] = 0.015625 }
 	end
 	
 	if Session.IsHost then
