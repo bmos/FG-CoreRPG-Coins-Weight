@@ -175,6 +175,8 @@ function onInit()
 		aDenominations['tumbaga'] = { ['nValue'] = 62, ['nWeight'] = 0.02 }
 		aDenominations['electrum'] = { ['nValue'] = 210, ['nWeight'] = 0.02 }
 		aDenominations['platinum'] = { ['nValue'] = 600, ['nWeight'] = 0.015625 }
+	else
+		Debug.chat("ruleset has no denominations defined in Coins Weight. If submitting denominations for inclusion, tell bmos ruleset name is: " .. sRuleset)
 	end
 	
 	if Session.IsHost then
