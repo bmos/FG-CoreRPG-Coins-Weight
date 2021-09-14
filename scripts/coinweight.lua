@@ -131,6 +131,12 @@ function onInit()
 		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
 		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
 		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
+	elseif sRuleset == "2E" then
+		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
+		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
+		aDenominations['ep'] = { ['nValue'] = .5, ['nWeight'] = .02 }
+		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
+		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
 	elseif sRuleset == "5E" then
 		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
 		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
