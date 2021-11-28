@@ -2,6 +2,9 @@
 --	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
 
+-- Used for item name and also finding the item, so use constant so it's never out of sync.
+COINS_INVENTORY_ITEM_NAME = 'Coins'
+
 ---	This function imports the data from the second column of coins used in damned's coins weight extension.
 --	bmos also used this data structure in an early version of Total Encumbrance.
 --	Once imported, the original database nodes are deleted.
@@ -9,8 +12,7 @@ local function upgradeDamnedCoinWeight(nodeCoinSlot)
 	local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
 	local nCoinAmount2 = DB.getValue(nodeCoinSlot, 'amountA', 0)
 	if nCoinAmount2 ~= 0 then
-		local nCoinAmount = nCoinAmount + nCoinAmount2
-		DB.setValue(nodeCoinSlot, 'amount', 'number', nCoinAmount)
+		DB.setValue(nodeCoinSlot, 'amount', 'number', nCoinAmount + nCoinAmount2)
 		if DB.getValue(nodeCoinSlot, 'amountA') then nodeCoinSlot.getChild('amountA').delete() end
 	end
 end
@@ -39,7 +41,7 @@ local function determineRounding(nTotalCoinsWeight)
 		return 2
 	else
 		return 3
-	end 
+	end
 end
 
 --	This function creates the "Coins" item in a PC's inventory.
@@ -48,7 +50,7 @@ local function createCoinsItem(nodeChar)
 	local nodeCoinsItem
 	if nodeChar.getParent().getName() == 'charsheet' then
 		nodeCoinsItem = DB.createChild(nodeChar.createChild('inventorylist'))
-		DB.setValue(nodeCoinsItem, 'name', 'string', 'Coins')
+		DB.setValue(nodeCoinsItem, 'name', 'string', COINS_INVENTORY_ITEM_NAME)
 		DB.setValue(nodeCoinsItem, 'type', 'string', 'Wealth and Money')
 		DB.setValue(nodeCoinsItem, 'description', 'formattedtext', Interface.getString("item_description_coins"))
 	end
@@ -57,10 +59,12 @@ local function createCoinsItem(nodeChar)
 end
 
 ---	This function looks for the "Coins" inventory item if it already exists.
+--- Also matches "Coins (Coins Weight Extension)" for more context in name.
 local function findCoinsItem(nodeChar)
 	for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
 		local sItemName = DB.getValue(nodeItem, 'name', '')
-		if sItemName == 'Coins' then
+		if sItemName == COINS_INVENTORY_ITEM_NAME
+		   or string.match(sItemName:lower(), '^%W*coins%W+coins%W+weight%W+extension%W*$') then
 			return nodeItem
 		end
 	end
@@ -184,7 +188,7 @@ function onInit()
 	else
 		Debug.chat("ruleset has no denominations defined in Coins Weight. If submitting denominations for inclusion, tell bmos ruleset name is: " .. sRuleset)
 	end
-	
+
 	if Session.IsHost then
 		DB.addHandler("charsheet.*.coins.*", "onChildUpdate", onCoinsValueChanged)
 	end
