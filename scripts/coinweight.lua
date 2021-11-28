@@ -59,7 +59,7 @@ local function createCoinsItem(nodeChar)
 end
 
 ---	This function looks for the "Coins" inventory item if it already exists.
---- Also matches "Coins (Coins Weight Extension)" for more context in name.
+---	Also matches "Coins (Coins Weight Extension)" for more context in name.
 local function findCoinsItem(nodeChar)
 	for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
 		local sItemName = DB.getValue(nodeItem, 'name', '')
