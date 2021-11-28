@@ -2,9 +2,6 @@
 --	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
 
--- Used for item name init and also finding the item, constant will never get out of sync.
-COINS_INVENTORY_ITEM_NAME = 'Coins'
-
 ---	This function imports the data from the second column of coins used in damned's coins weight extension.
 --	bmos also used this data structure in an early version of Total Encumbrance.
 --	Once imported, the original database nodes are deleted.
@@ -50,7 +47,7 @@ local function createCoinsItem(nodeChar)
 	local nodeCoinsItem
 	if nodeChar.getParent().getName() == 'charsheet' then
 		nodeCoinsItem = DB.createChild(nodeChar.createChild('inventorylist'))
-		DB.setValue(nodeCoinsItem, 'name', 'string', COINS_INVENTORY_ITEM_NAME)
+		DB.setValue(nodeCoinsItem, 'name', 'string', 'Coins')
 		DB.setValue(nodeCoinsItem, 'type', 'string', 'Wealth and Money')
 		DB.setValue(nodeCoinsItem, 'description', 'formattedtext', Interface.getString("item_description_coins"))
 	end
@@ -63,7 +60,7 @@ end
 local function findCoinsItem(nodeChar)
 	for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
 		local sItemName = DB.getValue(nodeItem, 'name', '')
-		if sItemName == COINS_INVENTORY_ITEM_NAME
+		if sItemName == 'Coins'
 		   or string.match(sItemName:lower(), '^%W*coins%W+coins%W+weight%W+extension%W*$') then
 			return nodeItem
 		end
