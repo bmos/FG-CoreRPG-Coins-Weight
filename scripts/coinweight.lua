@@ -2,7 +2,7 @@
 --	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
 
--- Used for item name and also finding the item, so use constant so it's never out of sync.
+-- Used for item name init and also finding the item, constant will never get out of sync.
 COINS_INVENTORY_ITEM_NAME = 'Coins'
 
 ---	This function imports the data from the second column of coins used in damned's coins weight extension.
