@@ -111,5 +111,5 @@ local function calcDefaultCurrencyEncumbrance_new(nodeChar)
 end
 
 function onInit()
-	CharEncumbranceManager.calcDefaultCurrencyEncumbrance(nodeChar) = calcDefaultCurrencyEncumbrance_new(nodeChar)
+	CharEncumbranceManager.calcDefaultCurrencyEncumbrance = calcDefaultCurrencyEncumbrance_new
 end
