@@ -102,14 +102,31 @@ local function computeCoins(nodeChar)
 	writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
 end
 
-local function calcDefaultCurrencyEncumbrance_new(nodeChar)
-	if OptionsManager.isOption("CURR", "on") then
+--	This function is called when a denomination field is changed
+local function onDenominationsChanged(nodeCurrency)
+	for _,nodeChar in pairs(DB.getChildren(DB.findNode('charsheet'))) do
 		computeCoins(nodeChar)
 	end
+end
 
-	return 0;
+--	This function is called when a coin field is changed
+local function onCoinsValueChanged(nodeCoinData)
+	local nodeChar = nodeCoinData.getChild('...')
+	if nodeChar.getParent().getName() == 'charsheet' then
+		computeCoins(nodeChar)
+	end
+end
+
+local function calcDefaultCurrencyEncumbrance_new(nodeChar)
+	return 0
 end
 
 function onInit()
 	CharEncumbranceManager.calcDefaultCurrencyEncumbrance = calcDefaultCurrencyEncumbrance_new
+	if Session.IsHost then
+		DB.addHandler("charsheet.*.coins.*", "onChildUpdate", onCoinsValueChanged)
+		DB.addHandler("charsheet.*.coins", "onChildDeleted", onCoinsValueChanged)
+		DB.addHandler("currencies.*.", "onChildUpdate", onDenominationsChanged)
+		DB.addHandler("currencies", "onChildDeleted", onDenominationsChanged)
+	end
 end
