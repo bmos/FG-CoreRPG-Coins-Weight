@@ -117,6 +117,8 @@ end
 function onInit()	
 	if Session.IsHost then
 		DB.addHandler("charsheet.*.coins.*", "onChildUpdate", onCoinsValueChanged)
+		DB.addHandler("charsheet.*.coins", "onChildDeleted", onCoinsValueChanged)
 		DB.addHandler("currencies.*.", "onChildUpdate", onDenominationsChanged)
+		DB.addHandler("currencies", "onChildDeleted", onDenominationsChanged)
 	end
 end
