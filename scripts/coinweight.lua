@@ -39,6 +39,7 @@ local function createCoinsItem(nodeChar)
 	if nodeChar.getParent().getName() == 'charsheet' then
 		nodeCoinsItem = DB.createChild(nodeChar.createChild('inventorylist'))
 		DB.setValue(nodeCoinsItem, 'name', 'string', COINS_INVENTORY_ITEM_NAME)
+		DB.setValue(nodeCoinsItem, 'count', 'number', 1)
 		DB.setValue(nodeCoinsItem, 'type', 'string', 'Wealth and Money')
 		DB.setValue(nodeCoinsItem, 'description', 'formattedtext', Interface.getString("item_description_coins"))
 	end
@@ -69,9 +70,11 @@ local function writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
 	elseif nTotalCoinsWeight < 0 and nodeCoinsItem then
 		DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 		DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
+		DB.setValue(nodeCoinsItem, 'count', 'number', 1)
 	elseif nodeCoinsItem then
 		DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 		DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding(nTotalCoinsWeight)))
+		DB.setValue(nodeCoinsItem, 'count', 'number', 1)
 	end
 end
 
