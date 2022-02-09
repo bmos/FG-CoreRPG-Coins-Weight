@@ -5,18 +5,6 @@
 -- Used for item name init and also finding the item, constant will never get out of sync.
 COINS_INVENTORY_ITEM_NAME = 'Coins'
 
----	This function imports the data from the second column of coins used in damned's coins weight extension.
---	bmos also used this data structure in an early version of Total Encumbrance.
---	Once imported, the original database nodes are deleted.
-local function upgradeDamnedCoinWeight(nodeCoinSlot)
-	local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
-	local nCoinAmount2 = DB.getValue(nodeCoinSlot, 'amountA', 0)
-	if nCoinAmount2 ~= 0 then
-		DB.setValue(nodeCoinSlot, 'amount', 'number', nCoinAmount + nCoinAmount2)
-		if DB.getValue(nodeCoinSlot, 'amountA') then nodeCoinSlot.getChild('amountA').delete() end
-	end
-end
-
 ---	This function rounds to the specified number of decimals
 local function round(number, decimals)
     local n = 10^(decimals or 0)
@@ -94,23 +82,28 @@ end
 local function computeCoins(nodeChar)
 	local nTotalCoinsWeight, nTotalCoinsWealth = 0, 0
 	for _,nodeCoinSlot in pairs(DB.getChildren(nodeChar, 'coins')) do
-		-- import data from other extensions
-		upgradeDamnedCoinWeight(nodeCoinSlot)
-
 		local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
 		local sDenomination = string.lower(DB.getValue(nodeCoinSlot, 'name', ''))
 		if sDenomination ~= '' then
-			for sDenominationName,tDenominationData in pairs(aDenominations) do
+			for _,nodeCurrency in pairs(DB.getChildren(DB.findNode('currencies'))) do
+				local sDenominationName = DB.getValue(nodeCurrency, 'name', '')
 				if string.match(sDenomination, string.lower(sDenominationName)) then
-					nTotalCoinsWealth = nTotalCoinsWealth + (nCoinAmount * tDenominationData['nValue'])
-					nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * tDenominationData['nWeight'])
+					nTotalCoinsWealth = nTotalCoinsWealth + (nCoinAmount * DB.getValue(nodeCurrency, 'value', 0))
+					nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * DB.getValue(nodeCurrency, 'weight', 0))
 				end
 			end
 		else
-			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * nDefaultCoinWeight)
+			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * .02)
 		end
 	end
 	writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
+end
+
+--	This function is called when a denomination field is changed
+local function onDenominationsChanged(nodeCurrency)
+	for _,nodeChar in pairs(DB.getChildren(DB.findNode('charsheet'))) do
+		computeCoins(nodeChar)
+	end
 end
 
 --	This function is called when a coin field is changed
@@ -121,75 +114,9 @@ local function onCoinsValueChanged(nodeCoinData)
 	end
 end
 
----	On initializing, the script checks what the current ruleset is.
---	It then loads the correct denominations into the aDenominations table.
---	Then it configures a database node handler to watch for changes to coin data.
-nDefaultCoinWeight = .02
-aDenominations = {}
-function onInit()
-	local sRuleset = User.getRulesetName()
-	-- Set multipliers for different currency denominations.
-	-- nValue = per-coin value multiplier. nWeight = per-coin weight multiplier (in pounds)
-	if sRuleset == "3.5E" or sRuleset == "PFRPG" or sRuleset == "PFRPG2" then
-		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
-		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
-		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
-		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
-	elseif sRuleset == "2E" then
-		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
-		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
-		aDenominations['ep'] = { ['nValue'] = .5, ['nWeight'] = .02 }
-		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
-		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
-	elseif sRuleset == "5E" then
-		aDenominations['pp'] = { ['nValue'] = 10, ['nWeight'] = .02 }
-		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
-		aDenominations['ep'] = { ['nValue'] = .5, ['nWeight'] = .02 }
-		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
-		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
-	elseif sRuleset == "4E" then
-		aDenominations['ad'] = { ['nValue'] = 10000, ['nWeight'] = .002 }
-		aDenominations['pp'] = { ['nValue'] = 100, ['nWeight'] = .02 }
-		aDenominations['gp'] = { ['nValue'] = 1, ['nWeight'] = .02 }
-		aDenominations['sp'] = { ['nValue'] = .1, ['nWeight'] = .02 }
-		aDenominations['cp'] = { ['nValue'] = .01, ['nWeight'] = .02 }
-	elseif sRuleset == "DFRPG" then
-		aDenominations['copper'] = { ['nValue'] = 1, ['nWeight'] = .02 }
-		aDenominations['silver'] = { ['nValue'] = 20, ['nWeight'] = .02 }
-		aDenominations['gold'] = { ['nValue'] = 400, ['nWeight'] = .02 }
-		aDenominations['platinum'] = { ['nValue'] = 800, ['nWeight'] = .02 }
-
-		aDenominations['1/2 gold'] = { ['nValue'] = 200, ['nWeight'] = 0.01 }
-		aDenominations['1/4 gold'] = { ['nValue'] = 100, ['nWeight'] = 0.005 }
-		aDenominations['1/8 gold'] = { ['nValue'] = 50, ['nWeight'] = 0.0025 }
-
-		aDenominations['billion'] = { ['nValue'] = 10, ['nWeight'] = .02 }
-		aDenominations['tumbaga'] = { ['nValue'] = 60, ['nWeight'] = .02 }
-		aDenominations['electrum'] = { ['nValue'] = 200, ['nWeight'] = .02 }
-	elseif sRuleset == "GURPS DF" or sRuleset == "DF" then
-		aDenominations['copper'] = { ['nValue'] = 1, ['nWeight'] = 0.016 }
-		aDenominations['copper farthing'] = { ['nValue'] = 1, ['nWeight'] = 0.016 }
-		aDenominations['farthing'] = { ['nValue'] = 1, ['nWeight'] = 0.016 }
-		aDenominations['cf'] = { ['nValue'] = 1, ['nWeight'] = 0.016 }
-
-		aDenominations['silver'] = { ['nValue'] = 4, ['nWeight'] = 0.004 }
-		aDenominations['silver penny'] = { ['nValue'] = 4, ['nWeight'] = 0.004 }
-		aDenominations['penny'] = { ['nValue'] = 4, ['nWeight'] = 0.004 }
-		aDenominations['sp'] = { ['nValue'] = 4, ['nWeight'] = 0.004 }
-
-		aDenominations['gold'] = { ['nValue'] = 80, ['nWeight'] = 0.004 }
-		aDenominations['gold piece'] = { ['nValue'] = 80, ['nWeight'] = 0.004 }
-		aDenominations['gp'] = { ['nValue'] = 80, ['nWeight'] = 0.004 }
-
-		aDenominations['billon'] = { ['nValue'] = 10, ['nWeight'] = 0.02 }
-		aDenominations['tumbaga'] = { ['nValue'] = 62, ['nWeight'] = 0.02 }
-		aDenominations['electrum'] = { ['nValue'] = 210, ['nWeight'] = 0.02 }
-		aDenominations['platinum'] = { ['nValue'] = 600, ['nWeight'] = 0.015625 }
-	else
-		Debug.chat("ruleset has no denominations defined in Coins Weight. If submitting denominations for inclusion, tell bmos ruleset name is: " .. sRuleset)
-	end
-
+function onInit()	
 	if Session.IsHost then
 		DB.addHandler("charsheet.*.coins.*", "onChildUpdate", onCoinsValueChanged)
+		DB.addHandler("currencies.*.", "onChildUpdate", onDenominationsChanged)
 	end
 end
