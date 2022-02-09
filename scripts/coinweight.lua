@@ -91,8 +91,8 @@ local function computeCoins(nodeChar)
 			for _,nodeCurrency in pairs(DB.getChildren(DB.findNode('currencies'))) do
 				local sDenominationName = DB.getValue(nodeCurrency, 'name', '')
 				if string.match(sDenomination, string.lower(sDenominationName)) then
-					nTotalCoinsWealth = nTotalCoinsWealth + (nCoinAmount * DB.getValue(nodeCurrency, 'value', 0))
-					nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * DB.getValue(nodeCurrency, 'weight', 0))
+					nTotalCoinsWealth = nTotalCoinsWealth + (nCoinAmount * DB.getValue(nodeCurrency, CurrencyManager.CAMPAIGN_CURRENCY_LIST_VALUE, 0))
+					nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * DB.getValue(nodeCurrency, CurrencyManager.CAMPAIGN_CURRENCY_LIST_WEIGHT, 0))
 				end
 			end
 		else
