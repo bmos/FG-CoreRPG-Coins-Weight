@@ -6,8 +6,6 @@ This extension has been tested with [FantasyGrounds Unity](https://www.fantasygr
 
 It has been tested with the CoreRPG, Pathfinder 1e, D&D 3.5E, and 5E rulesets.
 
-Previous users of [damned](https://www.fantasygrounds.com/forums/member.php?19192-damned)'s [5eCoinWeight extension](https://www.fantasygrounds.com/forums/showthread.php?41109-The-weight-of-the-coins&p=387476&viewfull=1#post387476) will have carried and uncarried coins (from both columns) brought over seamlessly. 
-
 # Features
 It does this by adding a "Coins" inventory item of the appropriate weight and setting the cost of this item to the total value of all coins.  If desired, the name of the inventory item can be extended for clarity using "Coins Weight Extension" and it will still be utilzed.  For example: Coins (Coins Weight Extension)
 This "Coins" inventory entry can be marked uncarried or put into a bag of holding (if using my [extraplanar containers](https://www.fantasygrounds.com/forums/showthread.php?67126-PFRPG-Extraplanar-Containers) extension) to negate the weight. If you use this extension with a ruleset that it doesn't have support for yet, it will post a message in the chat with the detected ruleset name. Please include this in any requests for more denominations to be added. To define the weight and value of additional denominations yourself—such as for homebrew currencies—edit the ext file attached to [this post](https://www.fantasygrounds.com/forums/showthread.php?67228-CoreRPG-Coins-Weight&p=588689&viewfull=1#post588689). Ask for help if you need it.
