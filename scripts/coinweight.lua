@@ -73,20 +73,22 @@ local function writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
 	if (nTotalCoinsWeight > 0 or nTotalCoinsWealth ~= 0) and not nodeCoinsItem then
 		nodeCoinsItem = createCoinsItem(nodeChar)
 	end
-	if (nTotalCoinsWeight <= 0 and nTotalCoinsWealth == 0) and nodeCoinsItem then
-		nodeCoinsItem.delete()
-		local nodeCoinsItemBookmark = nodeChar.getChild('coinsitembookmark')
-		if nodeCoinsItemBookmark then nodeCoinsItemBookmark.delete() end
-	elseif nTotalCoinsWeight < 0 and nodeCoinsItem then
-		DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
-		DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
-		DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-		DB.setValue(nodeChar, 'coinsitembookmark', 'string', nodeCoinsItem.getNodeName())
-	elseif nodeCoinsItem then
-		DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
-		DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding(nTotalCoinsWeight)))
-		DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-		DB.setValue(nodeChar, 'coinsitembookmark', 'string', nodeCoinsItem.getNodeName())
+	if nodeCoinsItem then
+		if (nTotalCoinsWeight <= 0 and nTotalCoinsWealth == 0) then
+			nodeCoinsItem.delete()
+			local nodeCoinsItemBookmark = nodeChar.getChild('coinsitembookmark')
+			if nodeCoinsItemBookmark then nodeCoinsItemBookmark.delete() end
+		elseif nTotalCoinsWeight < 0 then
+			DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
+			DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
+			DB.setValue(nodeCoinsItem, 'count', 'number', 1)
+			DB.setValue(nodeChar, 'coinsitembookmark', 'string', nodeCoinsItem.getNodeName())
+		else
+			DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
+			DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding(nTotalCoinsWeight)))
+			DB.setValue(nodeCoinsItem, 'count', 'number', 1)
+			DB.setValue(nodeChar, 'coinsitembookmark', 'string', nodeCoinsItem.getNodeName())
+		end
 	end
 end
 
