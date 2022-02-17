@@ -101,8 +101,8 @@ local function computeCoins(nodeChar)
 		local sDenomination = string.lower(DB.getValue(nodeCoinSlot, 'name', ''))
 		local tCurrency = CurrencyManager.getCurrencyRecord(sDenomination)
 		if tCurrency then
-			nTotalCoinsWealth = nTotalCoinsWealth + (nCoinAmount * tCurrency['nValue'])
-			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * tCurrency['nWeight'])
+			nTotalCoinsWealth = nTotalCoinsWealth + (nCoinAmount * (tCurrency['nValue'] or 0))
+			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * (tCurrency['nWeight'] or .02))
 		else
 			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * .02)
 		end
