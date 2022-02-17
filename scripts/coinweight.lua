@@ -50,8 +50,8 @@ end
 ---	This function looks for the "Coins" inventory item if it already exists.
 --	It also matches "Coins (Coins Weight Extension)" for more context in name.
 local function findCoinsItem(nodeChar)
-	local nodeCoinsItemBookmark = nodeChar.getChild('coinsitembookmark')
-	if nodeCoinsItemBookmark then return DB.findNode(DB.getText(nodeCoinsItemBookmark)) end
+	local _,sCoinsItemNode = DB.getValue(nodeChar, 'coinitemshortcut') 
+	if sCoinsItemNode then return DB.findNode(sCoinsItemNode) end
 	for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
 		local sItemName = DB.getValue(nodeItem, 'name', '')
 		if sItemName == COINS_INVENTORY_ITEM_NAME
@@ -63,9 +63,9 @@ end
 
 ---	This function writes the coin data to the database.
 local function writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
-	local sCoinItemNode = DB.getValue(nodeChar, 'coinsitembookmark')
 	local nodeCoinsItem
-	if sCoinItemNode then nodeCoinsItem = DB.findNode(sCoinItemNode) end
+	local _,sCoinsItemNode = DB.getValue(nodeChar, 'coinitemshortcut') 
+	if sCoinsItemNode then nodeCoinsItem = DB.findNode(sCoinsItemNode) end
 
 	-- search by name for backwards compatibility
 	if not nodeCoinsItem then nodeCoinsItem = findCoinsItem(nodeChar) end
@@ -74,20 +74,22 @@ local function writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
 		nodeCoinsItem = createCoinsItem(nodeChar)
 	end
 	if nodeCoinsItem then
+		local nodeCoinsItemBookmark = nodeChar.getChild('coinsitembookmark')
+		if nodeCoinsItemBookmark then nodeCoinsItemBookmark.delete() end
 		if (nTotalCoinsWeight <= 0 and nTotalCoinsWealth == 0) then
 			nodeCoinsItem.delete()
-			local nodeCoinsItemBookmark = nodeChar.getChild('coinsitembookmark')
-			if nodeCoinsItemBookmark then nodeCoinsItemBookmark.delete() end
+			local nodeCoinsItemShortcut = nodeChar.getChild('coinitemshortcut')
+			if nodeCoinsItemShortcut then nodeCoinsItemShortcut.delete() end
 		elseif nTotalCoinsWeight < 0 then
 			DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 			DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
 			DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-			DB.setValue(nodeChar, 'coinsitembookmark', 'string', nodeCoinsItem.getNodeName())
+			DB.setValue(nodeChar, 'coinitemshortcut', "windowreference", "item", nodeCoinsItem.getNodeName());
 		else
 			DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 			DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding(nTotalCoinsWeight)))
 			DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-			DB.setValue(nodeChar, 'coinsitembookmark', 'string', nodeCoinsItem.getNodeName())
+			DB.setValue(nodeChar, 'coinitemshortcut', "windowreference", "item", nodeCoinsItem.getNodeName());
 		end
 	end
 end
