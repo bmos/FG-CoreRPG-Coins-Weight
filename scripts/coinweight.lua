@@ -41,7 +41,7 @@ local function createCoinsItem(nodeChar)
 		DB.setValue(nodeCoinsItem, 'name', 'string', COINS_INVENTORY_ITEM_NAME)
 		DB.setValue(nodeCoinsItem, 'count', 'number', 1)
 		DB.setValue(nodeCoinsItem, 'type', 'string', 'Wealth and Money')
-		DB.setValue(nodeCoinsItem, 'description', 'formattedtext', Interface.getString("item_description_coins"))
+		DB.setValue(nodeCoinsItem, 'description', 'formattedtext', '<p>' .. Interface.getString("item_description_coins") .. '</p>')
 	end
 	return nodeCoinsItem
 end
