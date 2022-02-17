@@ -48,7 +48,7 @@ local function createCoinsItem(nodeChar)
 end
 
 ---	This function looks for the "Coins" inventory item if it already exists.
----	Also matches "Coins (Coins Weight Extension)" for more context in name.
+--	It also matches "Coins (Coins Weight Extension)" for more context in name.
 local function findCoinsItem(nodeChar)
 	for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
 		local sItemName = DB.getValue(nodeItem, 'name', '')
@@ -87,13 +87,10 @@ local function computeCoins(nodeChar)
 	for _,nodeCoinSlot in pairs(DB.getChildren(nodeChar, 'coins')) do
 		local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
 		local sDenomination = string.lower(DB.getValue(nodeCoinSlot, 'name', ''))
-		if sDenomination ~= '' then
-			for _,nodeCurrency in pairs(DB.getChildren(DB.findNode(CurrencyManager.CAMPAIGN_CURRENCY_LIST))) do
-				if string.match(sDenomination, string.lower(DB.getValue(nodeCurrency, CurrencyManager.CAMPAIGN_CURRENCY_LIST_NAME, ''))) then
-					nTotalCoinsWealth = nTotalCoinsWealth + (nCoinAmount * DB.getValue(nodeCurrency, CurrencyManager.CAMPAIGN_CURRENCY_LIST_VALUE, 0))
-					nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * DB.getValue(nodeCurrency, CurrencyManager.CAMPAIGN_CURRENCY_LIST_WEIGHT, 0))
-				end
-			end
+		local tCurrency = CurrencyManager.getCurrencyRecord(sDenomination)
+		if tCurrency then
+			nTotalCoinsWealth = nTotalCoinsWealth + (nCoinAmount * tCurrency['nValue'])
+			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * tCurrency['nWeight'])
 		else
 			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * .02)
 		end
