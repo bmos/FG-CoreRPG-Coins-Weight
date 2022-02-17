@@ -50,6 +50,8 @@ end
 ---	This function looks for the "Coins" inventory item if it already exists.
 --	It also matches "Coins (Coins Weight Extension)" for more context in name.
 local function findCoinsItem(nodeChar)
+	local nodeCoinsItemBookmark = nodeChar.getChild('coinsitembookmark')
+	if nodeCoinsItemBookmark then return DB.findNode(DB.getText(nodeCoinsItemBookmark)) end
 	for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
 		local sItemName = DB.getValue(nodeItem, 'name', '')
 		if sItemName == COINS_INVENTORY_ITEM_NAME
@@ -61,20 +63,30 @@ end
 
 ---	This function writes the coin data to the database.
 local function writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
-	local nodeCoinsItem = findCoinsItem(nodeChar)
+	local sCoinItemNode = DB.getValue(nodeChar, 'coinsitembookmark')
+	local nodeCoinsItem
+	if sCoinItemNode then nodeCoinsItem = DB.findNode(sCoinItemNode) end
+
+	-- search by name for backwards compatibility
+	if not nodeCoinsItem then nodeCoinsItem = findCoinsItem(nodeChar) end
+
 	if (nTotalCoinsWeight > 0 or nTotalCoinsWealth ~= 0) and not nodeCoinsItem then
 		nodeCoinsItem = createCoinsItem(nodeChar)
 	end
 	if (nTotalCoinsWeight <= 0 and nTotalCoinsWealth == 0) and nodeCoinsItem then
 		nodeCoinsItem.delete()
+		local nodeCoinsItemBookmark = nodeChar.getChild('coinsitembookmark')
+		if nodeCoinsItemBookmark then nodeCoinsItemBookmark.delete() end
 	elseif nTotalCoinsWeight < 0 and nodeCoinsItem then
 		DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 		DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
 		DB.setValue(nodeCoinsItem, 'count', 'number', 1)
+		DB.setValue(nodeChar, 'coinsitembookmark', 'string', nodeCoinsItem.getNodeName())
 	elseif nodeCoinsItem then
 		DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 		DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding(nTotalCoinsWeight)))
 		DB.setValue(nodeCoinsItem, 'count', 'number', 1)
+		DB.setValue(nodeChar, 'coinsitembookmark', 'string', nodeCoinsItem.getNodeName())
 	end
 end
 
