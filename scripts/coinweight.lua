@@ -43,7 +43,6 @@ local function createCoinsItem(nodeChar)
 		DB.setValue(nodeCoinsItem, 'type', 'string', 'Wealth and Money')
 		DB.setValue(nodeCoinsItem, 'description', 'formattedtext', Interface.getString("item_description_coins"))
 	end
-
 	return nodeCoinsItem
 end
 
@@ -84,12 +83,12 @@ local function writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
 			DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 			DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
 			DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-			DB.setValue(nodeChar, 'coinitemshortcut', "windowreference", "item", nodeCoinsItem.getNodeName());
+			DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', nodeCoinsItem.getNodeName());
 		else
 			DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 			DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding(nTotalCoinsWeight)))
 			DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-			DB.setValue(nodeChar, 'coinitemshortcut', "windowreference", "item", nodeCoinsItem.getNodeName());
+			DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', nodeCoinsItem.getNodeName());
 		end
 	end
 end
@@ -136,9 +135,9 @@ end
 function onInit()
 	CharEncumbranceManager.calcDefaultCurrencyEncumbrance = calcDefaultCurrencyEncumbrance_new
 	if Session.IsHost then
-		DB.addHandler("charsheet.*.coins.*", "onChildUpdate", onCoinsValueChanged)
-		DB.addHandler("charsheet.*.coins", "onChildDeleted", onCoinsValueChanged)
-		DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST .. ".*.", "onChildUpdate", onDenominationsChanged)
-		DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST, "onChildDeleted", onDenominationsChanged)
+		DB.addHandler('charsheet.*.coins.*', 'onChildUpdate', onCoinsValueChanged)
+		DB.addHandler('charsheet.*.coins', 'onChildDeleted', onCoinsValueChanged)
+		DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST .. '.*.', 'onChildUpdate', onDenominationsChanged)
+		DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST, 'onChildDeleted', onDenominationsChanged)
 	end
 end
