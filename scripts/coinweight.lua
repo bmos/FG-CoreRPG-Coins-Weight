@@ -50,7 +50,12 @@ end
 --	It also matches "Coins (Coins Weight Extension)" for more context in name.
 local function findCoinsItem(nodeChar)
 	local _,sCoinsItemNode = DB.getValue(nodeChar, 'coinitemshortcut') 
+
+	--temporary until backwards compatibility no longer necessary
+	if not sCoinsItemNode then sCoinsItemNode = DB.getValue(nodeChar, 'coinsitembookmark') end
+
 	if sCoinsItemNode then return DB.findNode(sCoinsItemNode) end
+	-- If path to coin item is not found in coinitemshortcut, search for the item by name (much slower)
 	for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
 		local sItemName = DB.getValue(nodeItem, 'name', '')
 		if sItemName == COINS_INVENTORY_ITEM_NAME
@@ -62,19 +67,17 @@ end
 
 ---	This function writes the coin data to the database.
 local function writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
-	local nodeCoinsItem
-	local _,sCoinsItemNode = DB.getValue(nodeChar, 'coinitemshortcut') 
-	if sCoinsItemNode then nodeCoinsItem = DB.findNode(sCoinsItemNode) end
+	local nodeCoinsItem = findCoinsItem(nodeChar)
 
-	-- search by name for backwards compatibility
-	if not nodeCoinsItem then nodeCoinsItem = findCoinsItem(nodeChar) end
-
-	if (nTotalCoinsWeight > 0 or nTotalCoinsWealth ~= 0) and not nodeCoinsItem then
+	if not nodeCoinsItem and (nTotalCoinsWeight > 0 or nTotalCoinsWealth ~= 0) then
 		nodeCoinsItem = createCoinsItem(nodeChar)
 	end
 	if nodeCoinsItem then
+
+		--temporary until backwards compatibility no longer necessary
 		local nodeCoinsItemBookmark = nodeChar.getChild('coinsitembookmark')
 		if nodeCoinsItemBookmark then nodeCoinsItemBookmark.delete() end
+
 		if (nTotalCoinsWeight <= 0 and nTotalCoinsWealth == 0) then
 			nodeCoinsItem.delete()
 			local nodeCoinsItemShortcut = nodeChar.getChild('coinitemshortcut')
