@@ -123,7 +123,15 @@ local function onDenominationsChanged(nodeCurrency)
 	end
 end
 
---	This function is called when a coin field is changed
+--	This function is called when a currency is removed from the character sheet
+local function onCoinsDeleted(nodeCoins)
+	local nodeChar = nodeCoins.getParent()
+	if nodeChar.getParent().getName() == 'charsheet' then
+		computeCoins(nodeChar)
+	end
+end
+
+--	This function is called when a coin name or quantity is changed ont he character sheet
 local function onCoinsValueChanged(nodeCoinData)
 	local nodeChar = nodeCoinData.getChild('...')
 	if nodeChar.getParent().getName() == 'charsheet' then
@@ -139,7 +147,7 @@ function onInit()
 	CharEncumbranceManager.calcDefaultCurrencyEncumbrance = calcDefaultCurrencyEncumbrance_new
 	if Session.IsHost then
 		DB.addHandler('charsheet.*.coins.*', 'onChildUpdate', onCoinsValueChanged)
-		DB.addHandler('charsheet.*.coins', 'onChildDeleted', onCoinsValueChanged)
+		DB.addHandler('charsheet.*.coins', 'onChildDeleted', onCoinsDeleted)
 		DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST .. '.*.', 'onChildUpdate', onDenominationsChanged)
 		DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST, 'onChildDeleted', onDenominationsChanged)
 	end
