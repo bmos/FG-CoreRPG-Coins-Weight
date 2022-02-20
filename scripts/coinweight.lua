@@ -35,15 +35,22 @@ end
 --	This function creates the "Coins" item in a PC's inventory.
 --	It populates the name, type, and description and then returns the database node.
 local function createCoinsItem(nodeChar)
-	local nodeCoinsItem
 	if nodeChar.getParent().getName() == 'charsheet' then
-		nodeCoinsItem = DB.createChild(nodeChar.createChild('inventorylist'))
-		DB.setValue(nodeCoinsItem, 'name', 'string', COINS_INVENTORY_ITEM_NAME)
-		DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-		DB.setValue(nodeCoinsItem, 'type', 'string', 'Wealth and Money')
-		DB.setValue(nodeCoinsItem, 'description', 'formattedtext', '<p>' .. Interface.getString("item_description_coins") .. '</p>')
+		local nodeFirstInventory
+		local tItemLists = ItemManager.getInventoryPaths("charsheet");
+		for _,sItemList in pairs(tItemLists) do
+			nodeFirstInventory = nodeChar.getChild(sItemList)
+			if nodeFirstInventory then break end
+		end
+		if nodeFirstInventory then
+			local nodeCoinsItem = DB.createChild(nodeFirstInventory)
+			DB.setValue(nodeCoinsItem, 'name', 'string', COINS_INVENTORY_ITEM_NAME)
+			DB.setValue(nodeCoinsItem, 'count', 'number', 1)
+			DB.setValue(nodeCoinsItem, 'type', 'string', 'Wealth and Money')
+			DB.setValue(nodeCoinsItem, 'description', 'formattedtext', '<p>' .. Interface.getString("item_description_coins") .. '</p>')
+			return nodeCoinsItem
+		end
 	end
-	return nodeCoinsItem
 end
 
 ---	This function looks for the "Coins" inventory item if it already exists.
@@ -55,12 +62,16 @@ local function findCoinsItem(nodeChar)
 	if not sCoinsItemNode then sCoinsItemNode = DB.getValue(nodeChar, 'coinsitembookmark') end
 
 	if sCoinsItemNode then return DB.findNode(sCoinsItemNode) end
+
 	-- If path to coin item is not found in coinitemshortcut, search for the item by name (much slower)
-	for _,nodeItem in pairs(DB.getChildren(nodeChar, 'inventorylist')) do
-		local sItemName = DB.getValue(nodeItem, 'name', '')
-		if sItemName == COINS_INVENTORY_ITEM_NAME
-		   or string.match(sItemName:lower(), '^%W*coins%W+coins%W+weight%W+extension%W*$') then
-			return nodeItem
+	local tItemLists = ItemManager.getInventoryPaths("charsheet");
+	for _,sItemList in pairs(tItemLists) do
+		for _,nodeItem in pairs(DB.getChildren(nodeChar, sItemList)) do
+			local sItemName = DB.getValue(nodeItem, 'name', '')
+			if sItemName == COINS_INVENTORY_ITEM_NAME
+			   or string.match(sItemName:lower(), '^%W*coins%W+coins%W+weight%W+extension%W*$') then
+				return nodeItem
+			end
 		end
 	end
 end
@@ -102,15 +113,18 @@ end
 --	If it doesn't find a match, it assumes a coin weight of .02.
 local function computeCoins(nodeChar)
 	local nTotalCoinsWeight, nTotalCoinsWealth = 0, 0
-	for _,nodeCoinSlot in pairs(DB.getChildren(nodeChar, 'coins')) do
-		local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
-		local sDenomination = string.lower(DB.getValue(nodeCoinSlot, 'name', ''))
-		local tCurrency = CurrencyManager.getCurrencyRecord(sDenomination)
-		if tCurrency then
-			nTotalCoinsWealth = nTotalCoinsWealth + (nCoinAmount * (tCurrency['nValue'] or 0))
-			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * (tCurrency['nWeight'] or .02))
-		else
-			nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * .02)
+	local tCurrencyPaths = CurrencyManager.getCurrencyPaths("charsheet");
+	for _,sCurrencyPath in pairs(tCurrencyPaths) do
+		for _,nodeCoinSlot in pairs(DB.getChildren(nodeChar, sCurrencyPath)) do
+			local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
+			local sDenomination = string.lower(DB.getValue(nodeCoinSlot, 'name', ''))
+			local tCurrency = CurrencyManager.getCurrencyRecord(sDenomination)
+			if tCurrency then
+				nTotalCoinsWealth = nTotalCoinsWealth + (nCoinAmount * (tCurrency['nValue'] or 0))
+				nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * (tCurrency['nWeight'] or .02))
+			else
+				nTotalCoinsWeight = nTotalCoinsWeight + (nCoinAmount * .02)
+			end
 		end
 	end
 	writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
@@ -146,8 +160,11 @@ end
 function onInit()
 	CharEncumbranceManager.calcDefaultCurrencyEncumbrance = calcDefaultCurrencyEncumbrance_new
 	if Session.IsHost then
-		DB.addHandler('charsheet.*.coins.*', 'onChildUpdate', onCoinsValueChanged)
-		DB.addHandler('charsheet.*.coins', 'onChildDeleted', onCoinsDeleted)
+		local tCurrencyPaths = CurrencyManager.getCurrencyPaths("charsheet");
+		for _,sCurrencyPath in pairs(tCurrencyPaths) do
+			DB.addHandler("charsheet.*." .. sCurrencyPath .. '.*', 'onChildUpdate', onCoinsValueChanged)
+			DB.addHandler("charsheet.*." .. sCurrencyPath, 'onChildDeleted', onCoinsDeleted)
+		end
 		DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST .. '.*.', 'onChildUpdate', onDenominationsChanged)
 		DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST, 'onChildDeleted', onDenominationsChanged)
 	end
