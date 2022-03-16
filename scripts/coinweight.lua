@@ -3,6 +3,7 @@
 --
 
 -- Used for item name init and also finding the item, constant will never get out of sync.
+-- luacheck: globals COINS_INVENTORY_ITEM_NAME
 COINS_INVENTORY_ITEM_NAME = 'Coins'
 
 ---	This function rounds to the specified number of decimals
@@ -56,7 +57,7 @@ end
 ---	This function looks for the "Coins" inventory item if it already exists.
 --	It also matches "Coins (Coins Weight Extension)" for more context in name.
 local function findCoinsItem(nodeChar)
-	local _,sCoinsItemNode = DB.getValue(nodeChar, 'coinitemshortcut') 
+	local _,sCoinsItemNode = DB.getValue(nodeChar, 'coinitemshortcut')
 
 	--temporary until backwards compatibility no longer necessary
 	if not sCoinsItemNode then sCoinsItemNode = DB.getValue(nodeChar, 'coinsitembookmark') end
@@ -131,7 +132,7 @@ local function computeCoins(nodeChar)
 end
 
 --	This function is called when a denomination field is changed
-local function onDenominationsChanged(nodeCurrency)
+local function onDenominationsChanged()
 	for _,nodeChar in pairs(DB.getChildren(DB.findNode('charsheet'))) do
 		computeCoins(nodeChar)
 	end
@@ -153,7 +154,7 @@ local function onCoinsValueChanged(nodeCoinData)
 	end
 end
 
-local function calcDefaultCurrencyEncumbrance_new(nodeChar)
+local function calcDefaultCurrencyEncumbrance_new()
 	return 0
 end
 
