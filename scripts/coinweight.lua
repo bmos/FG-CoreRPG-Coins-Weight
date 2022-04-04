@@ -12,8 +12,8 @@ COINS_INVENTORY_ITEM_NAME = 'Coins'
 local function computeCoins(nodeChar)
 
 	---	This function writes the coin data to the database.
-	local function writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
-	
+	local function writeCoinData(nTotalCoinsWeight, nTotalCoinsWealth)
+
 		--- This function figures out how many decimal places to round to.
 		--	If the total weight is greater than or equal to 100, it recommends 0 (whole numbers).
 		--	If it's greater than or equal to 10, it recommends 1.
@@ -21,7 +21,7 @@ local function computeCoins(nodeChar)
 		--	Otherwise, it recommends 3.
 		--	This maximizes difficulty at low levels when it has the most impact.
 		--	The intent is to keep the number visible on the inventory list without clipping.
-		local function determineRounding(nTotalCoinsWeight)
+		local function determineRounding()
 			if nTotalCoinsWeight >= 100 then
 				return 0
 			elseif nTotalCoinsWeight >= 10 then
@@ -32,7 +32,7 @@ local function computeCoins(nodeChar)
 				return 3
 			end
 		end
-	
+
 		---	This function rounds to the specified number of decimals
 		local function round(number, decimals)
 			local n = 10 ^ (decimals or 0)
@@ -44,10 +44,10 @@ local function computeCoins(nodeChar)
 			end
 			return number / n
 		end
-	
+
 		--	This function creates the "Coins" item in a PC's inventory.
 		--	It populates the name, type, and description and then returns the database node.
-		local function createCoinsItem(nodeChar)
+		local function createCoinsItem()
 			if nodeChar.getParent().getName() == 'charsheet' then
 				local nodeFirstInventory
 				local tItemLists = ItemManager.getInventoryPaths('charsheet');
@@ -65,17 +65,17 @@ local function computeCoins(nodeChar)
 				end
 			end
 		end
-	
+
 		---	This function looks for the "Coins" inventory item if it already exists.
 		--	It also matches "Coins (Coins Weight Extension)" for more context in name.
-		local function findCoinsItem(nodeChar)
+		local function findCoinsItem()
 			local _, sCoinsItemNode = DB.getValue(nodeChar, 'coinitemshortcut')
-		
+
 			-- temporary until backwards compatibility no longer necessary
 			if not sCoinsItemNode then sCoinsItemNode = DB.getValue(nodeChar, 'coinsitembookmark') end
-		
+
 			if sCoinsItemNode then return DB.findNode(sCoinsItemNode) end
-		
+
 			-- If path to coin item is not found in coinitemshortcut, search for the item by name (much slower)
 			local function searchInventoriesForCoinsItem()
 				local tItemLists = ItemManager.getInventoryPaths('charsheet');
@@ -91,16 +91,16 @@ local function computeCoins(nodeChar)
 
 			searchInventoriesForCoinsItem()
 		end
-	
-		local nodeCoinsItem = findCoinsItem(nodeChar)
-	
-		if not nodeCoinsItem and (nTotalCoinsWeight > 0 or nTotalCoinsWealth ~= 0) then nodeCoinsItem = createCoinsItem(nodeChar) end
+
+		local nodeCoinsItem = findCoinsItem()
+
+		if not nodeCoinsItem and (nTotalCoinsWeight > 0 or nTotalCoinsWealth ~= 0) then nodeCoinsItem = createCoinsItem() end
 		if nodeCoinsItem then
-	
+
 			-- temporary until backwards compatibility no longer necessary
 			local nodeCoinsItemBookmark = nodeChar.getChild('coinsitembookmark')
 			if nodeCoinsItemBookmark then nodeCoinsItemBookmark.delete() end
-	
+
 			if nTotalCoinsWeight <= 0 and nTotalCoinsWealth == 0 then
 				nodeCoinsItem.delete()
 				local nodeCoinsItemShortcut = nodeChar.getChild('coinitemshortcut')
@@ -112,7 +112,7 @@ local function computeCoins(nodeChar)
 				DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', nodeCoinsItem.getNodeName());
 			else
 				DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
-				DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding(nTotalCoinsWeight)))
+				DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding()))
 				DB.setValue(nodeCoinsItem, 'count', 'number', 1)
 				DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', nodeCoinsItem.getNodeName());
 			end
@@ -134,7 +134,7 @@ local function computeCoins(nodeChar)
 			end
 		end
 	end
-	writeCoinData(nodeChar, nTotalCoinsWeight, nTotalCoinsWealth)
+	writeCoinData(nTotalCoinsWeight, nTotalCoinsWealth)
 end
 
 --	This function is called when a denomination field is changed
