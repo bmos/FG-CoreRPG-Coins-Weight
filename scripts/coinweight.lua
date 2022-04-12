@@ -138,9 +138,7 @@ local function computeCoins(nodeChar)
 end
 
 --	This function is called when a denomination field is changed
-local function onDenominationsChanged()
-	for _, nodeChar in pairs(DB.getChildren(DB.findNode('charsheet'))) do computeCoins(nodeChar) end
-end
+local function onDenominationsChanged() for _, nodeChar in pairs(DB.getChildren(DB.findNode('charsheet'))) do computeCoins(nodeChar) end end
 
 --	This function is called when a currency is removed from the character sheet
 local function onCoinsDeleted(nodeCoins)
