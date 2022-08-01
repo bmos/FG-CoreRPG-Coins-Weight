@@ -10,7 +10,7 @@
 		<description>This extension changes coin weight tracking by making an inventory item rather than just including it in the total carried weight.</description>
 	</properties>
 
-	<announcement text="https://www.fantasygrounds.com/forums/showthread.php?67228-CoreRPG-Coins-Weight\rCoin Weight v2.0:\rCalculates coin weight by leveraging the existing inventory weight process." font="emotefont" icon="bmoscoinsweight"/>
+	<announcement text="https://www.fantasygrounds.com/forums/showthread.php?67228-CoreRPG-Coins-Weight\rCoins Weight v2.0:\rCalculates coin weight by leveraging the existing inventory weight process." font="emotefont" icon="bmoscoinsweight"/>
 
 	<base>
 		<!-- Scripts -->
