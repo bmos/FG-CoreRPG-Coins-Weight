@@ -4,7 +4,7 @@
 This extension calculates coin weight and total monetary wealth via the inventory by creating an item whose weight and value are equivalent to all carried coins.
 
 # Compatibility and Instructions
-This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) 4.1.13 (2022-01-05).
+This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) 4.3.0 (2022-10-20).
 
 It has been tested with the CoreRPG, Pathfinder 1e, D&D 3.5E, and 5E rulesets. I likely works with many/most other rulesets as well.
 
