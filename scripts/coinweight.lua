@@ -46,11 +46,11 @@ local function computeCoins(nodeChar)
 		--	This function creates the "Coins" item in a PC's inventory.
 		--	It populates the name, type, and description and then returns the database node.
 		local function createCoinsItem()
-			if nodeChar.getParent().getName() == 'charsheet' then
+			if DB.getParent(nodeChar).getName() == 'charsheet' then
 				local nodeFirstInventory
 				local tItemLists = ItemManager.getInventoryPaths('charsheet')
 				for _, sItemList in pairs(tItemLists) do
-					nodeFirstInventory = nodeChar.getChild(sItemList)
+					nodeFirstInventory = DB.getChild(nodeChar, sItemList)
 					if nodeFirstInventory then break end
 				end
 				if nodeFirstInventory then
@@ -97,13 +97,13 @@ local function computeCoins(nodeChar)
 		if not nodeCoinsItem and (nTotalCoinsWeight > 0 or nTotalCoinsWealth ~= 0) then nodeCoinsItem = createCoinsItem() end
 		if nodeCoinsItem then
 			-- temporary until backwards compatibility no longer necessary
-			local nodeCoinsItemBookmark = nodeChar.getChild('coinsitembookmark')
-			if nodeCoinsItemBookmark then nodeCoinsItemBookmark.delete() end
+			local nodeCoinsItemBookmark = DB.getChild(nodeChar, 'coinsitembookmark')
+			if nodeCoinsItemBookmark then DB.deleteNode(nodeCoinsItemBookmark) end
 
 			if nTotalCoinsWeight <= 0 and nTotalCoinsWealth == 0 then
 				nodeCoinsItem.delete()
-				local nodeCoinsItemShortcut = nodeChar.getChild('coinitemshortcut')
-				if nodeCoinsItemShortcut then nodeCoinsItemShortcut.delete() end
+				local nodeCoinsItemShortcut = DB.getChild(nodeChar, 'coinitemshortcut')
+				if nodeCoinsItemShortcut then DB.deleteNode(nodeCoinsItemShortcut) end
 			elseif nTotalCoinsWeight < 0 then
 				DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 				DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
@@ -145,14 +145,14 @@ end
 
 --	This function is called when a currency is removed from the character sheet
 local function onCoinsDeleted(nodeCoins)
-	local nodeChar = nodeCoins.getParent()
-	if nodeChar.getParent().getName() == 'charsheet' then computeCoins(nodeChar) end
+	local nodeChar = DB.getParent(nodeCoins)
+	if DB.getParent(nodeChar).getName() == 'charsheet' then computeCoins(nodeChar) end
 end
 
 --	This function is called when a coin name or quantity is changed ont he character sheet
 local function onCoinsValueChanged(nodeCoinData)
-	local nodeChar = nodeCoinData.getChild('...')
-	if nodeChar.getParent().getName() == 'charsheet' then computeCoins(nodeChar) end
+	local nodeChar = DB.getChild(nodeCoinData, '...')
+	if DB.getParent(nodeChar).getName() == 'charsheet' then computeCoins(nodeChar) end
 end
 
 local function calcDefaultCurrencyEncumbrance_new() return 0 end
