@@ -46,7 +46,7 @@ local function computeCoins(nodeChar)
 		--	This function creates the "Coins" item in a PC's inventory.
 		--	It populates the name, type, and description and then returns the database node.
 		local function createCoinsItem()
-			if DB.getParent(nodeChar).getName() == 'charsheet' then
+			if DB.getName(DB.getParent(nodeChar)) == 'charsheet' then
 				local nodeFirstInventory
 				local tItemLists = ItemManager.getInventoryPaths('charsheet')
 				for _, sItemList in pairs(tItemLists) do
@@ -101,7 +101,7 @@ local function computeCoins(nodeChar)
 			if nodeCoinsItemBookmark then DB.deleteNode(nodeCoinsItemBookmark) end
 
 			if nTotalCoinsWeight <= 0 and nTotalCoinsWealth == 0 then
-				nodeCoinsItem.delete()
+				DB.deleteNode(nodeCoinsItem)
 				local nodeCoinsItemShortcut = DB.getChild(nodeChar, 'coinitemshortcut')
 				if nodeCoinsItemShortcut then DB.deleteNode(nodeCoinsItemShortcut) end
 			elseif nTotalCoinsWeight < 0 then
@@ -138,7 +138,7 @@ end
 
 --	This function is called when a denomination field is changed
 local function onDenominationsChanged()
-	for _, nodeChar in pairs(DB.getChildren(DB.findNode('charsheet'))) do
+	for _, nodeChar in pairs(DB.getChildren('charsheet')) do
 		computeCoins(nodeChar)
 	end
 end
@@ -146,13 +146,13 @@ end
 --	This function is called when a currency is removed from the character sheet
 local function onCoinsDeleted(nodeCoins)
 	local nodeChar = DB.getParent(nodeCoins)
-	if DB.getParent(nodeChar).getName() == 'charsheet' then computeCoins(nodeChar) end
+	if DB.getName(DB.getParent(nodeChar)) == 'charsheet' then computeCoins(nodeChar) end
 end
 
 --	This function is called when a coin name or quantity is changed ont he character sheet
 local function onCoinsValueChanged(nodeCoinData)
 	local nodeChar = DB.getChild(nodeCoinData, '...')
-	if DB.getParent(nodeChar).getName() == 'charsheet' then computeCoins(nodeChar) end
+	if DB.getName(DB.getParent(nodeChar)) == 'charsheet' then computeCoins(nodeChar) end
 end
 
 local function calcDefaultCurrencyEncumbrance_new() return 0 end
