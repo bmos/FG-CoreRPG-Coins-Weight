@@ -78,7 +78,7 @@ local function computeCoins(nodeChar)
 			local function searchInventoriesForCoinsItem()
 				local tItemLists = ItemManager.getInventoryPaths('charsheet')
 				for _, sItemList in pairs(tItemLists) do
-					for _, nodeItem in pairs(DB.getChildren(nodeChar, sItemList)) do
+					for _, nodeItem in ipairs(DB.getChildList(nodeChar, sItemList)) do
 						local sItemName = DB.getValue(nodeItem, 'name', '')
 						if
 							sItemName == COINS_INVENTORY_ITEM_NAME or string.match(sItemName:lower(), '^%W*coins%W+coins%W+weight%W+extension%W*$')
@@ -121,7 +121,7 @@ local function computeCoins(nodeChar)
 	local nTotalCoinsWeight, nTotalCoinsWealth = 0, 0
 	local tCurrencyPaths = CurrencyManager.getCurrencyPaths('charsheet')
 	for _, sCurrencyPath in pairs(tCurrencyPaths) do
-		for _, nodeCoinSlot in pairs(DB.getChildren(nodeChar, sCurrencyPath)) do
+		for _, nodeCoinSlot in ipairs(DB.getChildList(nodeChar, sCurrencyPath)) do
 			local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
 			local sDenomination = string.lower(DB.getValue(nodeCoinSlot, 'name', ''))
 			local tCurrency = CurrencyManager.getCurrencyRecord(sDenomination)
@@ -138,7 +138,7 @@ end
 
 --	This function is called when a denomination field is changed
 local function onDenominationsChanged()
-	for _, nodeChar in pairs(DB.getChildren('charsheet')) do
+	for _, nodeChar in ipairs(DB.getChildList('charsheet')) do
 		computeCoins(nodeChar)
 	end
 end
