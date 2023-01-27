@@ -108,12 +108,12 @@ local function computeCoins(nodeChar)
 				DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 				DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
 				DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-				DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', nodeCoinsItem.getNodeName())
+				DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', DB.getPath(nodeCoinsItem))
 			else
 				DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 				DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding()))
 				DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-				DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', nodeCoinsItem.getNodeName())
+				DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', DB.getPath(nodeCoinsItem))
 			end
 		end
 	end
