@@ -46,7 +46,7 @@ local function computeCoins(nodeChar)
 		--	This function creates the "Coins" item in a PC's inventory.
 		--	It populates the name, type, and description and then returns the database node.
 		local function createCoinsItem()
-			if DB.getName(DB.getParent(nodeChar)) == 'charsheet' then
+			if DB.getName(nodeChar, '..') == 'charsheet' then
 				local nodeFirstInventory
 				local tItemLists = ItemManager.getInventoryPaths('charsheet')
 				for _, sItemList in pairs(tItemLists) do
@@ -146,13 +146,13 @@ end
 --	This function is called when a currency is removed from the character sheet
 local function onCoinsDeleted(nodeCoins)
 	local nodeChar = DB.getParent(nodeCoins)
-	if DB.getName(DB.getParent(nodeChar)) == 'charsheet' then computeCoins(nodeChar) end
+	if DB.getName(nodeChar, '..') == 'charsheet' then computeCoins(nodeChar) end
 end
 
 --	This function is called when a coin name or quantity is changed ont he character sheet
 local function onCoinsValueChanged(nodeCoinData)
 	local nodeChar = DB.getChild(nodeCoinData, '...')
-	if DB.getName(DB.getParent(nodeChar)) == 'charsheet' then computeCoins(nodeChar) end
+	if DB.getName(nodeChar, '..') == 'charsheet' then computeCoins(nodeChar) end
 end
 
 local function calcDefaultCurrencyEncumbrance_new() return 0 end
