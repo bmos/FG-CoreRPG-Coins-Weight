@@ -15,8 +15,7 @@ local function computeCoins(nodeChar)
 		--- This function figures out how many decimal places to round to.
 		--	If the total weight is greater than or equal to 100, it recommends 0 (whole numbers).
 		--	If it's greater than or equal to 10, it recommends 1.
-		--	If it's greater than or equal to 1, it recommends 2.
-		--	Otherwise, it recommends 3.
+		--	Otherwise, it recommends 2.
 		--	This maximizes difficulty at low levels when it has the most impact.
 		--	The intent is to keep the number visible on the inventory list without clipping.
 		local function determineRounding()
@@ -24,10 +23,8 @@ local function computeCoins(nodeChar)
 				return 0
 			elseif nTotalCoinsWeight >= 10 then
 				return 1
-			elseif nTotalCoinsWeight >= 1 then
-				return 2
 			else
-				return 3
+				return 2
 			end
 		end
 
