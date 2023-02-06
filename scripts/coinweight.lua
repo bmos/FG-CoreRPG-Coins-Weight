@@ -156,13 +156,11 @@ local function calcDefaultCurrencyEncumbrance_new() return 0 end
 
 function onInit()
 	CharEncumbranceManager.calcDefaultCurrencyEncumbrance = calcDefaultCurrencyEncumbrance_new
-	if Session.IsHost then
-		local tCurrencyPaths = CurrencyManager.getCurrencyPaths('charsheet')
-		for _, sCurrencyPath in pairs(tCurrencyPaths) do
-			DB.addHandler('charsheet.*.' .. sCurrencyPath .. '.*', 'onChildUpdate', onCoinsValueChanged)
-			DB.addHandler('charsheet.*.' .. sCurrencyPath, 'onChildDeleted', onCoinsDeleted)
-		end
-		DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST .. '.*.', 'onChildUpdate', onDenominationsChanged)
-		DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST, 'onChildDeleted', onDenominationsChanged)
+	if not Session.IsHost then return end
+	for _, sCurrencyPath in pairs(CurrencyManager.getCurrencyPaths('charsheet')) do
+		DB.addHandler('charsheet.*.' .. sCurrencyPath .. '.*', 'onChildUpdate', onCoinsValueChanged)
+		DB.addHandler('charsheet.*.' .. sCurrencyPath, 'onChildDeleted', onCoinsDeleted)
 	end
+	DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST .. '.*.', 'onChildUpdate', onDenominationsChanged)
+	DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST, 'onChildDeleted', onDenominationsChanged)
 end
