@@ -15,8 +15,7 @@ local function computeCoins(nodeChar)
 		--- This function figures out how many decimal places to round to.
 		--	If the total weight is greater than or equal to 100, it recommends 0 (whole numbers).
 		--	If it's greater than or equal to 10, it recommends 1.
-		--	If it's greater than or equal to 1, it recommends 2.
-		--	Otherwise, it recommends 3.
+		--	Otherwise, it recommends 2.
 		--	This maximizes difficulty at low levels when it has the most impact.
 		--	The intent is to keep the number visible on the inventory list without clipping.
 		local function determineRounding()
@@ -24,10 +23,8 @@ local function computeCoins(nodeChar)
 				return 0
 			elseif nTotalCoinsWeight >= 10 then
 				return 1
-			elseif nTotalCoinsWeight >= 1 then
-				return 2
 			else
-				return 3
+				return 2
 			end
 		end
 
@@ -46,7 +43,7 @@ local function computeCoins(nodeChar)
 		--	This function creates the "Coins" item in a PC's inventory.
 		--	It populates the name, type, and description and then returns the database node.
 		local function createCoinsItem()
-			if DB.getName(DB.getParent(nodeChar)) == 'charsheet' then
+			if DB.getName(nodeChar, '..') == 'charsheet' then
 				local nodeFirstInventory
 				local tItemLists = ItemManager.getInventoryPaths('charsheet')
 				for _, sItemList in pairs(tItemLists) do
@@ -78,7 +75,7 @@ local function computeCoins(nodeChar)
 			local function searchInventoriesForCoinsItem()
 				local tItemLists = ItemManager.getInventoryPaths('charsheet')
 				for _, sItemList in pairs(tItemLists) do
-					for _, nodeItem in pairs(DB.getChildren(nodeChar, sItemList)) do
+					for _, nodeItem in ipairs(DB.getChildList(nodeChar, sItemList)) do
 						local sItemName = DB.getValue(nodeItem, 'name', '')
 						if
 							sItemName == COINS_INVENTORY_ITEM_NAME or string.match(sItemName:lower(), '^%W*coins%W+coins%W+weight%W+extension%W*$')
@@ -108,12 +105,12 @@ local function computeCoins(nodeChar)
 				DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 				DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
 				DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-				DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', nodeCoinsItem.getNodeName())
+				DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', DB.getPath(nodeCoinsItem))
 			else
 				DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
 				DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding()))
 				DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-				DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', nodeCoinsItem.getNodeName())
+				DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', DB.getPath(nodeCoinsItem))
 			end
 		end
 	end
@@ -121,7 +118,7 @@ local function computeCoins(nodeChar)
 	local nTotalCoinsWeight, nTotalCoinsWealth = 0, 0
 	local tCurrencyPaths = CurrencyManager.getCurrencyPaths('charsheet')
 	for _, sCurrencyPath in pairs(tCurrencyPaths) do
-		for _, nodeCoinSlot in pairs(DB.getChildren(nodeChar, sCurrencyPath)) do
+		for _, nodeCoinSlot in ipairs(DB.getChildList(nodeChar, sCurrencyPath)) do
 			local nCoinAmount = DB.getValue(nodeCoinSlot, 'amount', 0)
 			local sDenomination = string.lower(DB.getValue(nodeCoinSlot, 'name', ''))
 			local tCurrency = CurrencyManager.getCurrencyRecord(sDenomination)
@@ -138,7 +135,7 @@ end
 
 --	This function is called when a denomination field is changed
 local function onDenominationsChanged()
-	for _, nodeChar in pairs(DB.getChildren('charsheet')) do
+	for _, nodeChar in ipairs(DB.getChildList('charsheet')) do
 		computeCoins(nodeChar)
 	end
 end
@@ -146,26 +143,24 @@ end
 --	This function is called when a currency is removed from the character sheet
 local function onCoinsDeleted(nodeCoins)
 	local nodeChar = DB.getParent(nodeCoins)
-	if DB.getName(DB.getParent(nodeChar)) == 'charsheet' then computeCoins(nodeChar) end
+	if DB.getName(nodeChar, '..') == 'charsheet' then computeCoins(nodeChar) end
 end
 
 --	This function is called when a coin name or quantity is changed ont he character sheet
 local function onCoinsValueChanged(nodeCoinData)
 	local nodeChar = DB.getChild(nodeCoinData, '...')
-	if DB.getName(DB.getParent(nodeChar)) == 'charsheet' then computeCoins(nodeChar) end
+	if DB.getName(nodeChar, '..') == 'charsheet' then computeCoins(nodeChar) end
 end
 
 local function calcDefaultCurrencyEncumbrance_new() return 0 end
 
 function onInit()
 	CharEncumbranceManager.calcDefaultCurrencyEncumbrance = calcDefaultCurrencyEncumbrance_new
-	if Session.IsHost then
-		local tCurrencyPaths = CurrencyManager.getCurrencyPaths('charsheet')
-		for _, sCurrencyPath in pairs(tCurrencyPaths) do
-			DB.addHandler('charsheet.*.' .. sCurrencyPath .. '.*', 'onChildUpdate', onCoinsValueChanged)
-			DB.addHandler('charsheet.*.' .. sCurrencyPath, 'onChildDeleted', onCoinsDeleted)
-		end
-		DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST .. '.*.', 'onChildUpdate', onDenominationsChanged)
-		DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST, 'onChildDeleted', onDenominationsChanged)
+	if not Session.IsHost then return end
+	for _, sCurrencyPath in pairs(CurrencyManager.getCurrencyPaths('charsheet')) do
+		DB.addHandler('charsheet.*.' .. sCurrencyPath .. '.*', 'onChildUpdate', onCoinsValueChanged)
+		DB.addHandler('charsheet.*.' .. sCurrencyPath, 'onChildDeleted', onCoinsDeleted)
 	end
+	DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST .. '.*.', 'onChildUpdate', onDenominationsChanged)
+	DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST, 'onChildDeleted', onDenominationsChanged)
 end
