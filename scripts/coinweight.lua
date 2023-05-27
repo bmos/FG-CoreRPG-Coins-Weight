@@ -55,7 +55,7 @@ local function computeCoins(nodeChar)
 					DB.setValue(nodeCoinsItem, 'name', 'string', COINS_INVENTORY_ITEM_NAME)
 					DB.setValue(nodeCoinsItem, 'count', 'number', 1)
 					DB.setValue(nodeCoinsItem, 'type', 'string', 'Wealth and Money')
-					DB.setValue(nodeCoinsItem, 'description', 'formattedtext', '<p>' .. Interface.getString('item_description_coins') .. '</p>')
+					DB.setValue(nodeCoinsItem, 'description', 'formattedtext', string.format('<p>%s</p>', Interface.getString('item_description_coins')))
 					return nodeCoinsItem
 				end
 			end
@@ -158,8 +158,8 @@ function onInit()
 	CharEncumbranceManager.calcDefaultCurrencyEncumbrance = calcDefaultCurrencyEncumbrance_new
 	if not Session.IsHost then return end
 	for _, sCurrencyPath in pairs(CurrencyManager.getCurrencyPaths('charsheet')) do
-		DB.addHandler('charsheet.*.' .. sCurrencyPath .. '.*', 'onChildUpdate', onCoinsValueChanged)
-		DB.addHandler('charsheet.*.' .. sCurrencyPath, 'onChildDeleted', onCoinsDeleted)
+		DB.addHandler(string.format('charsheet.*.%s.*', sCurrencyPath), 'onChildUpdate', onCoinsValueChanged)
+		DB.addHandler(string.format('charsheet.*.%s', sCurrencyPath), 'onChildDeleted', onCoinsDeleted)
 	end
 	DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST .. '.*.', 'onChildUpdate', onDenominationsChanged)
 	DB.addHandler(CurrencyManager.CAMPAIGN_CURRENCY_LIST, 'onChildDeleted', onDenominationsChanged)
