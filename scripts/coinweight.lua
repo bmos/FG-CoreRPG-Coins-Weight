@@ -90,28 +90,31 @@ local function computeCoins(nodeChar)
 		end
 
 		local nodeCoinsItem = findCoinsItem()
-
 		if not nodeCoinsItem and (nTotalCoinsWeight > 0 or nTotalCoinsWealth ~= 0) then nodeCoinsItem = createCoinsItem() end
-		if nodeCoinsItem then
-			-- temporary until backwards compatibility no longer necessary
-			local nodeCoinsItemBookmark = DB.getChild(nodeChar, 'coinsitembookmark')
-			if nodeCoinsItemBookmark then DB.deleteNode(nodeCoinsItemBookmark) end
+		if not nodeCoinsItem then return end
 
-			if nTotalCoinsWeight <= 0 and nTotalCoinsWealth == 0 then
-				DB.deleteNode(nodeCoinsItem)
-				local nodeCoinsItemShortcut = DB.getChild(nodeChar, 'coinitemshortcut')
-				if nodeCoinsItemShortcut then DB.deleteNode(nodeCoinsItemShortcut) end
-			elseif nTotalCoinsWeight < 0 then
-				DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
-				DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
-				DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-				DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', DB.getPath(nodeCoinsItem))
-			else
-				DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
-				DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding()))
-				DB.setValue(nodeCoinsItem, 'count', 'number', 1)
-				DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', DB.getPath(nodeCoinsItem))
-			end
+		-- temporary until backwards compatibility no longer necessary
+		local nodeCoinsItemBookmark = DB.getChild(nodeChar, 'coinsitembookmark')
+
+		if nodeCoinsItemBookmark then DB.deleteNode(nodeCoinsItemBookmark) end
+
+		if nTotalCoinsWeight <= 0 and nTotalCoinsWealth == 0 then
+			DB.deleteNode(nodeCoinsItem)
+			local nodeCoinsItemShortcut = DB.getChild(nodeChar, 'coinitemshortcut')
+			if nodeCoinsItemShortcut then DB.deleteNode(nodeCoinsItemShortcut) end
+		elseif nTotalCoinsWeight < 0 then
+			DB.setValue(nodeCoinsItem, 'cost', 'string', nTotalCoinsWealth .. ' gp')
+			DB.setValue(nodeCoinsItem, 'weight', 'number', 0) -- coins can't be negative weight
+			DB.setValue(nodeCoinsItem, 'count', 'number', 1)
+			DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', DB.getPath(nodeCoinsItem))
+		else
+			local nCostRound = 3
+			if User.getRulesetName() == 'PFRPG2' then nCostRound = 0 end
+
+			DB.setValue(nodeCoinsItem, 'cost', 'string', round(nTotalCoinsWeight, nCostRound) .. ' gp')
+			DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding()))
+			DB.setValue(nodeCoinsItem, 'count', 'number', 1)
+			DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', DB.getPath(nodeCoinsItem))
 		end
 	end
 
