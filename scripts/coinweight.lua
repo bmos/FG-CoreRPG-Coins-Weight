@@ -109,7 +109,7 @@ local function computeCoins(nodeChar)
 			DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', DB.getPath(nodeCoinsItem))
 		else
 			local nCostRound = 3
-			if User.getRulesetName() == 'PFRPG2' then nCostRound = 0 end
+			if User.getRulesetName() == 'PFRPG2' or User.getRulesetName() == 'PFRPG2-Legacy' then nCostRound = 0 end
 
 			DB.setValue(nodeCoinsItem, 'cost', 'string', round(nTotalCoinsWeight, nCostRound) .. ' gp')
 			DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding()))
