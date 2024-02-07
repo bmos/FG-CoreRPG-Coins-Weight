@@ -127,7 +127,7 @@ local function computeCoins(nodeChar)
 				nCostRound = 0
 			end
 
-			DB.setValue(nodeCoinsItem, 'cost', 'string', round(nTotalCoinsWeight, nCostRound) .. ' gp')
+			DB.setValue(nodeCoinsItem, 'cost', 'string', round(nTotalCoinsWealth, nCostRound) .. ' gp')
 			DB.setValue(nodeCoinsItem, 'weight', 'number', round(nTotalCoinsWeight, determineRounding(nTotalCoinsWeight)))
 			DB.setValue(nodeCoinsItem, 'count', 'number', 1)
 			DB.setValue(nodeChar, 'coinitemshortcut', 'windowreference', 'item', DB.getPath(nodeCoinsItem))
