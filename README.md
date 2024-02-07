@@ -1,4 +1,4 @@
-[![Build FG-Usable File](https://github.com/bmos/FG-CoreRPG-Coins-Weight/actions/workflows/create-ext.yml/badge.svg)](https://github.com/bmos/FG-CoreRPG-Coins-Weight/actions/workflows/create-ext.yml) [![Luacheck](https://github.com/bmos/FG-CoreRPG-Coins-Weight/actions/workflows/luacheck.yml/badge.svg)](https://github.com/bmos/FG-CoreRPG-Coins-Weight/actions/workflows/luacheck.yml)
+[![Build FG-Usable File](https://github.com/bmos/FG-CoreRPG-Coins-Weight/actions/workflows/release.yml/badge.svg)](https://github.com/bmos/FG-CoreRPG-Coins-Weight/actions/workflows/release.yml) [![Luacheck](https://github.com/bmos/FG-CoreRPG-Coins-Weight/actions/workflows/luacheck.yml/badge.svg)](https://github.com/bmos/FG-CoreRPG-Coins-Weight/actions/workflows/luacheck.yml)
 
 # Coins Weight
 This extension calculates coin weight and total monetary wealth via the inventory by creating an item whose weight and value are equivalent to all carried coins.
