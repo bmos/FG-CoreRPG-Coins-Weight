@@ -82,16 +82,9 @@ local function computeCoins(nodeChar)
 		--	It also matches "Coins (Coins Weight Extension)" for more context in name.
 		local function findCoinsItem()
 			local _, sCoinsItemNode = DB.getValue(nodeChar, 'coinitemshortcut')
-
-			-- temporary until backwards compatibility no longer necessary
-			if not sCoinsItemNode then
-				sCoinsItemNode = DB.getValue(nodeChar, 'coinsitembookmark')
-			end
-
 			if sCoinsItemNode then
 				return DB.findNode(sCoinsItemNode)
 			end
-
 			searchInventoriesForCoinsItem(nodeChar)
 		end
 
@@ -101,13 +94,6 @@ local function computeCoins(nodeChar)
 		end
 		if not nodeCoinsItem then
 			return
-		end
-
-		-- temporary until backwards compatibility no longer necessary
-		local nodeCoinsItemBookmark = DB.getChild(nodeChar, 'coinsitembookmark')
-
-		if nodeCoinsItemBookmark then
-			DB.deleteNode(nodeCoinsItemBookmark)
 		end
 
 		if nTotalCoinsWeight <= 0 and nTotalCoinsWealth == 0 then
